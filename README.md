@@ -1,4 +1,4 @@
 # How to run
-pnpm i \\
+pnpm i \
 pnpm run dev
 
