@@ -1,6 +1,8 @@
 import { Container, Row, Col } from "react-bootstrap";
 import HeroImage from "../assets/img/hero.png";
 import { kelasTerbaru, dataSwiper } from "../data/index";
+import { carouselData } from "../data/carousel";
+import Carousel from "../components/Carousel";
 import { useNavigate } from "react-router-dom";
 import React, { useRef, useState } from "react";
 import Faqcomp from "../components/Faqcomp";
@@ -17,52 +19,18 @@ const Homepage = () => {
   const navigate = useNavigate();
   return (
     <div className="homepage">
-      <header className="w-100 min-vh-100 d-flex align-items-center overflow-hidden">
-        <Container>
-          <Row className="header-box d-flex align-items-center">
-            <Col lg="6">
-              <h1 className="mb-4 animate__animated animate__fadeInUp animate__fast">
-                Temukan <br />
-                <span>Bakat</span> <br />
-                Lets GO
-              </h1>
-              <p className="mb-4 animate__animated animate__fadeInLeft animate_fast">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Reiciendis iste voluptatem magni quidem, exercitationem eos.
-              </p>
-              <button
-                className="me-3 btn btn-lg btn-danger rounded-1 mb-xs-0 mb-0 animate__animated animate__lightSpeedInLeft animate__fast"
-                onClick={() => {
-                  navigate("/kelas");
-                }}
-              >
-                Lihat Kelas
-              </button>
-              <button className=" btn btn-lg btn-outline-danger rounded-1 animate__animated animate__lightSpeedInLeft animate__fast">
-                Lihat Promo
-              </button>
-            </Col>
-            <Col lg="6" className="pt-lg-0 pt-5">
-              <img
-                src={HeroImage}
-                alt="Gambar"
-                className="animate__animated animate__fadeInUp animate__fast"
-              />
-            </Col>
-          </Row>
-        </Container>
-      </header>
+      <Carousel />
       <div className="kelas w-100 min-vh-100">
         <Container>
           <Row>
-            <Col>
+            {/* <Col>
               <h1 className="text-center fw-bold fs-2">Kelas Terbaru</h1>
               <p className="text-center">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
               </p>
-            </Col>
+            </Col> */}
           </Row>
-          <Row>
+          {/* <Row>
             {kelasTerbaru.map((kelas) => {
               return (
                 <Col
@@ -115,10 +83,10 @@ const Homepage = () => {
                 <i className="fa-solid fa-chevron-right ms-2"></i>
               </button>
             </Col>
-          </Row>
+          </Row> */}
         </Container>
       </div>
-      <div className="testimonial">
+      {/* <div className="testimonial">
         <Container>
           <Row>
             <Col className="text-center pb-5">
@@ -173,7 +141,7 @@ const Homepage = () => {
             </Swiper>
           </Row>
         </Container>
-      </div>
+      </div> */}
       <Faqcomp />
     </div>
   );

@@ -15,29 +15,63 @@ import People3 from "../assets/img/testimonial/people-3.jpg";
 export const navLinks = [
   {
     id: 1,
-    path: "",
-    text: "Home",
+    title: "Dashboard",
+    path: "/",
+    text: "Dashboard",
   },
   {
     id: 2,
-    path: "kelas",
-    text: "Kelas",
+    path: "",
+    text: "Profil",
+    subMenu: [
+      { id: 1, path: "tentang", text: "Tentang P3M" },
+      { id: 2, path: "pimpinan-lembaga", text: "Pimpinan Lembaga" },
+      { id: 3, path: "struktur-organisasi", text: "Struktur Organisasi" },
+    ],
   },
   {
     id: 3,
-    path: "testi",
-    text: "Testimonial",
+    path: "",
+    text: "Penelitian",
+    subMenu: [
+      { id: 1, path: "panduan-penelitian", text: "Panduan Penelitian" },
+      { id: 2, path: "sk-rektor", text: "SK Rektor Penelitian" },
+      { id: 3, path: "dokumen-penelitian", text: "Dokumen Penelitian" },
+    ],
   },
   {
     id: 4,
-    path: "faq",
-    text: "FAQ",
+    path: "",
+    text: "Pengabdian Kepada Masyarakat",
+    subMenu: [
+      {
+        id: 1,
+        path: "program-pengabdian-masyarakat",
+        text: "Program Pengabdian Kepada Masyarakat",
+      },
+      {
+        id: 2,
+        path: "program-panduan-pengabdian-masyarakat-mandiri",
+        text: "Program Pengabdian Kepada Masyarakat Mandiri",
+      },
+      {
+        id: 3,
+        path: "panduan-pengabdian-kepada-masyarakat",
+        text: "Panduan Pengabdian Kepada Masyarakat",
+      },
+      { id: 4, path: "faq", text: "FAQ" },
+    ],
   },
   {
     id: 5,
-    path: "syarat",
-    text: "Syarat & Ketentuan",
+    path: "faq",
+    text: "FAQ",
   },
+  // {
+  //   id: 6,
+  //   path: "syarat",
+  //   text: "Syarat & Ketentuan",
+  // },
 ];
 
 export const semuaKelas = [
@@ -356,49 +390,49 @@ export const faq = [
   {
     id: 1,
     eventKey: 0,
-    title: "Apakah ini Berlangganan?",
+    title: "lorem ipsum dolor sit amet?",
     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id estlaborum.",
   },
   {
     id: 2,
     eventKey: 1,
-    title: "Bagaimana Sistem Belajarnya?",
+    title: "lorem ipsum dolor sit amet?",
     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id estlaborum.",
   },
   {
     id: 3,
     eventKey: 2,
-    title: "Apakah Boleh di Share ke Orang Lain?",
+    title: "lorem ipsum dolor sit amet?",
     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id estlaborum.",
   },
   {
     id: 4,
     eventKey: 3,
-    title: "Apakah Ada Grup Diskusi?",
+    title: "lorem ipsum dolor sit amet?",
     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id estlaborum.",
   },
   {
     id: 5,
     eventKey: 4,
-    title: "Apakah dapat di Akses Selamanya?",
+    title: "lorem ipsum dolor sit amet?",
     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id estlaborum.",
   },
   {
     id: 6,
     eventKey: 5,
-    title: "Apakah ada Mentornya?",
+    title: "lorem ipsum dolor sit amet?",
     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id estlaborum.",
   },
   {
     id: 7,
     eventKey: 6,
-    title: "Apakah Saya Boleh Mendownload Videonya?",
+    title: "lorem ipsum dolor sit amet?",
     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id estlaborum.",
   },
   {
     id: 8,
     eventKey: 7,
-    title: "Apakah boleh ganti Kelas ketika sudah Membeli?",
+    title: "lorem ipsum dolor sit amet?",
     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id estlaborum.",
   },
 ];
