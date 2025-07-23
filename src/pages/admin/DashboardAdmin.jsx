@@ -1,12 +1,21 @@
 import { useState } from 'react';
 import CrudPimpinanLembaga from './CrudPimpinanLembaga';
 import CrudPanduanPenelitian from './CrudPanduanPenelitian';
-import CrudPanduanPengabdianMasyarakat from './CrudPanduanPengabdianMasyarakat';
+import CrudProgramPanduanPengabdianMasyarakat from './CrudProgramPanduanPengabdianMasyarakat';
 import CrudSKRektor from './CrudSKRektor';
 import CrudDokumenPenelitian from './CrudDokumenPenelitian';
 import CrudProgramPengabdianMasyarakat from './CrudProgramPengabdianMasyarakat';
-import CrudProgramPanduanPengabdianMasyarakat from './CrudProgramPanduanPengabdianMasyarakat';
+
+
+import CrudInformasiPenelitian from './CrudInformasiPenelitian';
 import CrudProgramPanduanPengabdianMasyarakatMandiri from './CrudProgramPanduanPengabdianMasyarakatMandiri';
+
+import CrudKelolaKKN from './CrudKelolaKKN';
+
+import CrudJurnalLayananMasyarakat from './CrudJurnalLayananMasyarakat';
+import CrudKuisioner from './CrudKuisioner';
+
+
 
 // Struktur menuList yang benar
 const menuList = [
@@ -22,6 +31,7 @@ const menuList = [
     label: 'Penelitian',
     submenus: [
       { key: 'panduanPenelitian', label: 'Panduan Penelitian', component: <CrudPanduanPenelitian /> },
+      { key: 'informasiPenelitian', label: 'Informasi Penelitian', component: <CrudInformasiPenelitian /> },
       { key: 'dokumenPenelitian', label: 'Kelola Dokumen Penelitian', component: <CrudDokumenPenelitian /> },
       { key: 'skRektor', label: 'Kelola SK Rektor', component: <CrudSKRektor /> },
     ],
@@ -35,6 +45,33 @@ const menuList = [
       { key: 'programPanduanPengabdianMandiri', label: 'Program Pengabdian Masyarakat Mandiri', component: <CrudProgramPanduanPengabdianMasyarakatMandiri /> },
     ],
   },
+  {
+    key: 'kuisioner',
+    label: 'Kelola Kuisioner / Komplain',
+    submenus: [
+      { key: 'kuisionerPenelitian', label: 'Penelitian', component: <CrudKuisioner kategori="penelitian" /> },
+      { key: 'kuisionerPengabdian', label: 'Pengabdian Kepada Masyarakat', component: <CrudKuisioner kategori="pengabdian" /> },
+      { key: 'kuisionerKKN', label: 'KKN', component: <CrudKuisioner kategori="kkn" /> },
+    ],
+  },
+  {
+    key: 'jurnalLayananMasyarakat',
+    label: 'Kelola Jurnal Layanan Masyarakat',
+    submenus: [
+      { key: 'jurnalLayananMasyarakat', label: 'Link Jurnal Layanan Masyarakat', component: <CrudJurnalLayananMasyarakat /> },
+    ],
+  },
+  {
+    key: 'kkn',
+    label: 'Kelola Kuliah Kerja Nyata',
+    submenus: [
+      { key: 'informasiKKN', label: 'Informasi KKN UNIM', component: <CrudKelolaKKN kategori="informasi" /> },
+      { key: 'programKKN', label: 'Program KKN UNIM', component: <CrudKelolaKKN kategori="program" /> },
+      { key: 'bukuPanduanKKN', label: 'Buku Panduan KKN BBM', component: <CrudKelolaKKN kategori="bukuPanduan" /> },
+      { key: 'skKKN', label: 'SK KKN BBM UNIM', component: <CrudKelolaKKN kategori="sk" /> },
+    ],
+  },
+
 ];
 
 const DashboardAdmin = () => {
@@ -59,7 +96,8 @@ const DashboardAdmin = () => {
         </div>
         <div style={{ flex: 1, marginTop: 16 }}>
           {menuList.map((menu) => {
-            const isDropdown = menu.key === 'panduan' || menu.key === 'program';
+            // Tambahkan 'kuisioner' sebagai dropdown
+            const isDropdown = menu.key === 'panduan' || menu.key === 'program' || menu.key === 'kkn' || menu.key === 'kuisioner';
             return (
               <div key={menu.key}>
                 <div
@@ -113,7 +151,7 @@ const DashboardAdmin = () => {
                     </button>
                   )}
                 </div>
-                {/* Submenu tampil hanya jika dropdown terbuka (untuk panduan/program), atau menu aktif dan bukan dropdown */}
+                {/* Submenu tampil hanya jika dropdown terbuka (untuk panduan/program/kuisioner/kkn), atau menu aktif dan bukan dropdown */}
                 {menu.submenus.length > 1 && ((isDropdown && openDropdown === menu.key) || (!isDropdown && activeMenu === menu.key)) && (
                   <div style={{ background: '#263238', paddingLeft: 0 }}>
                     {menu.submenus.map((submenu) => (
