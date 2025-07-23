@@ -30,11 +30,10 @@ function Navbarcomp() {
   return (
     <Navbar
       expand="lg"
-      className={changeColor ? "color-active" : ""}
+      className={`d-flex ${changeColor ? "color-active" : ""} `}
       fixed="top" // Added for better user experience with the scroll effect
     >
-      <Container>
-        <Navbar.Brand className="">
+      <Navbar.Brand className="">
           <NavLink
             to="/"
             className="text-decoration-none fs-3 fw-bold text-dark d-flex align-items-center"
@@ -48,6 +47,7 @@ function Navbarcomp() {
             P3M UNIM
           </NavLink>
         </Navbar.Brand>
+      <Container>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mx-auto text-center">

@@ -37,6 +37,7 @@ export const navLinks = [
       { id: 1, path: "panduan-penelitian", text: "Panduan Penelitian" },
       { id: 2, path: "sk-rektor", text: "SK Rektor Penelitian" },
       { id: 3, path: "dokumen-penelitian", text: "Dokumen Penelitian" },
+      {id: 4, path: "informasi-penelitian", text: "Informasi Penelitian" },
     ],
   },
   {
@@ -59,19 +60,37 @@ export const navLinks = [
         path: "panduan-pengabdian-kepada-masyarakat",
         text: "Panduan Pengabdian Kepada Masyarakat",
       },
-      { id: 4, path: "faq", text: "FAQ" },
+      { id: 4, path: "informasi-pengabdian-pada-masyarakat", text: "Informasi Pengabdian Kepada Masyarakat" },
+      { id: 5, path: "sk-pengabdian-pada-masyarakat", text: "SK Pengabdian Kepada Masyarakat" },
+      { id: 6, path: "dokumen-pengabdian-pada-masyarakat", text: "Dokumen Pengabdian Kepada Masyarakat" },
     ],
   },
   {
     id: 5,
-    path: "faq",
-    text: "FAQ",
+    path: "",
+    text: "Kuliah Kerja Nyata",
+    subMenu: [
+      { id: 1, path: "informasi-kkn", text: "Informasi KKN UNIM" },
+      { id: 2, path: "program-kkn-unim", text: "Program KKN UNIM" },
+      { id: 3, path: "buku-panduan-kkn-bbm", text: "Buku Panduan KKN BBM" },
+      { id: 4, path: "sk-kkn-bbm-unim", text: "SK KKN BBM UNIM" },
+    ],
   },
-  // {
-  //   id: 6,
-  //   path: "syarat",
-  //   text: "Syarat & Ketentuan",
-  // },
+  {
+    id: 6,
+    path: "",
+    text: "Jurnal Layanan Masyarakat", 
+  },
+  {
+    id: 7,
+    path: "",
+    text: "Kuisioner/Komplain",
+    subMenu: [
+      { id: 1, path: "", text: "Penelitian" },
+      { id: 2, path: "", text: "Pengabdian Kepada Masyarakat" },
+      { id: 3, path: "", text: "KKN" },
+    ],
+  },
 ];
 
 export const semuaKelas = [

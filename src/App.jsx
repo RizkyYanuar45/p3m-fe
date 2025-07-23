@@ -6,6 +6,7 @@ import PanduanPenelitian from "./pages/PanduanPenelitian";
 import ProgramPanduanPengabdianMasyarakatMandiri from "./pages/ProgramPanduanPengabdianMasyarakatMandiri";
 import StrukturOrganisasi from "./pages/StrukturOrganisasi";
 import DokumenPenelitian from "./pages/DokumenPenelitian";
+import InformasiPenelitian from "./pages/InformasiPenelitian";
 import SKRektor from "./pages/SKRektor";
 import Sepatupage from "./pages/Sepatupage";
 import Syarat from "./pages/Syarat";
@@ -54,6 +55,7 @@ function App() {
               />
               <Route path="/sk-rektor" Component={SKRektor} />
               <Route path="/kelas" Component={Sepatupage} />
+              <Route path="/informasi-penelitian" Component={InformasiPenelitian} />
               <Route path="/syarat" Component={Syarat} />
               <Route path="/testi" Component={Testimonial} />
               <Route path="/faq" Component={Faq} />
