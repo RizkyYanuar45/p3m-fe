@@ -46,7 +46,7 @@ const CrudInformasiPenelitian = () => {
 
   return (
     <div>
-      <h2>Kelola Informasi Penelitian</h2>
+      <h2>Informasi Penelitian</h2>
       <form onSubmit={handleSubmit} style={{ marginBottom: 24, background: '#f5f5f5', padding: 16, borderRadius: 8 }}>
         <div style={{ marginBottom: 8 }}>
           <label>Judul:<br />

@@ -17,7 +17,7 @@ const CrudJurnalLayananMasyarakat = () => {
 
   return (
     <div>
-      <h2>Kelola Jurnal Layanan Masyarakat</h2>
+      <h2>Jurnal Layanan Masyarakat</h2>
       <form onSubmit={handleSubmit} style={{ background: '#f5f5f5', padding: 16, borderRadius: 8, marginBottom: 24 }}>
         <div style={{ marginBottom: 12 }}>
           <label>Link Jurnal:<br />

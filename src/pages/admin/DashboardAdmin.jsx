@@ -5,12 +5,17 @@ import CrudProgramPanduanPengabdianMasyarakat from './CrudProgramPanduanPengabdi
 import CrudSKRektor from './CrudSKRektor';
 import CrudDokumenPenelitian from './CrudDokumenPenelitian';
 import CrudProgramPengabdianMasyarakat from './CrudProgramPengabdianMasyarakat';
+// Placeholder imports for new submenus (replace with actual components if available)
+import CrudInformasiPengabdian from './CrudInformasiPengabdian';
+import CrudSKPengabdian from './CrudSKPengabdian';
+import CrudDokumenPengabdian from './CrudDokumenPengabdian';
 
 
 import CrudInformasiPenelitian from './CrudInformasiPenelitian';
 import CrudProgramPanduanPengabdianMasyarakatMandiri from './CrudProgramPanduanPengabdianMasyarakatMandiri';
 
 import CrudKelolaKKN from './CrudKelolaKKN';
+import CrudInformasiKKN from './CrudInformasiKKN';
 
 import CrudJurnalLayananMasyarakat from './CrudJurnalLayananMasyarakat';
 import CrudKuisioner from './CrudKuisioner';
@@ -32,8 +37,8 @@ const menuList = [
     submenus: [
       { key: 'panduanPenelitian', label: 'Panduan Penelitian', component: <CrudPanduanPenelitian /> },
       { key: 'informasiPenelitian', label: 'Informasi Penelitian', component: <CrudInformasiPenelitian /> },
-      { key: 'dokumenPenelitian', label: 'Kelola Dokumen Penelitian', component: <CrudDokumenPenelitian /> },
-      { key: 'skRektor', label: 'Kelola SK Rektor', component: <CrudSKRektor /> },
+      { key: 'dokumenPenelitian', label: 'Dokumen Penelitian', component: <CrudDokumenPenelitian /> },
+      { key: 'skRektor', label: 'SK Rektor', component: <CrudSKRektor /> },
     ],
   },
   {
@@ -41,8 +46,11 @@ const menuList = [
     label: 'Pengabdian Kepada Masyarakat',
     submenus: [
       { key: 'programPengabdian', label: 'Program Pengabdian Masyarakat', component: <CrudProgramPengabdianMasyarakat /> },
-      { key: 'programPanduanPengabdian', label: 'Program Panduan Pengabdian Masyarakat', component: <CrudProgramPanduanPengabdianMasyarakat /> },
+      { key: 'programPanduanPengabdian', label: 'Panduan Pengabdian Masyarakat', component: <CrudProgramPanduanPengabdianMasyarakat /> },
       { key: 'programPanduanPengabdianMandiri', label: 'Program Pengabdian Masyarakat Mandiri', component: <CrudProgramPanduanPengabdianMasyarakatMandiri /> },
+      { key: 'informasiPengabdian', label: 'Informasi Pengabdian Kepada Masyarakat', component: <CrudInformasiPengabdian /> },
+      { key: 'skPengabdian', label: 'SK Pengabdian Kepada Masyarakat', component: <CrudSKPengabdian /> },
+      { key: 'dokumenPengabdian', label: 'Dokumen Pengabdian Kepada Masyarakat', component: <CrudDokumenPengabdian /> },
     ],
   },
   {
@@ -65,7 +73,7 @@ const menuList = [
     key: 'kkn',
     label: 'Kelola Kuliah Kerja Nyata',
     submenus: [
-      { key: 'informasiKKN', label: 'Informasi KKN UNIM', component: <CrudKelolaKKN kategori="informasi" /> },
+      { key: 'informasiKKN', label: 'Informasi KKN UNIM', component: <CrudInformasiKKN /> },
       { key: 'programKKN', label: 'Program KKN UNIM', component: <CrudKelolaKKN kategori="program" /> },
       { key: 'bukuPanduanKKN', label: 'Buku Panduan KKN BBM', component: <CrudKelolaKKN kategori="bukuPanduan" /> },
       { key: 'skKKN', label: 'SK KKN BBM UNIM', component: <CrudKelolaKKN kategori="sk" /> },

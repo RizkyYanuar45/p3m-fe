@@ -21,7 +21,7 @@ const allDokumen = [
   { key: 'DokumenPenelitianAkhirRisetKolaborasiData', label: 'Akhir Riset Kolaborasi', data: DokumenPenelitianAkhirRisetKolaborasiData },
 ];
 
-const CrudDokumenPenelitian = () => {
+const CrudDokumenPengabdian = () => {
   const [dokumenList, setDokumenList] = useState(allDokumen);
   const [selected, setSelected] = useState(allDokumen[0].key);
   const [form, setForm] = useState({ title: '', driveUrl: '' });
@@ -67,7 +67,7 @@ const CrudDokumenPenelitian = () => {
 
   return (
     <div>
-      <h3>Dokumen Penelitian</h3>
+      <h3>Dokumen Pengabdian Kepada Masyarakat</h3>
       <div style={{ marginBottom: 16 }}>
         <label>Pilih Kategori:&nbsp;</label>
         <select value={selected} onChange={e => setSelected(e.target.value)}>
@@ -116,4 +116,4 @@ const CrudDokumenPenelitian = () => {
   );
 };
 
-export default CrudDokumenPenelitian;
+export default CrudDokumenPengabdian;
