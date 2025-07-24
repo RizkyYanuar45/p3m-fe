@@ -56,7 +56,7 @@ function Navbarcomp() {
                 className="me-2"
                 style={{ width: "120px" }}
               />
-              <div className="flex-column align-items-center justify-content-center">
+              <div className=" d-flex flex-column align-items-center justify-content-center">
                 <h1 className="fw-bold">P3M Universitas Islam Majapahit</h1>
                 <p className="fw-light">
                   Pusat Penelitian dan Pengabdian kepada Masyarakat

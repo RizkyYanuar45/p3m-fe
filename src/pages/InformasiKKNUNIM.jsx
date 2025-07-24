@@ -68,7 +68,7 @@ const semuaArtikel = [
 ];
 // --- Akhir Data Artikel ---
 
-const InformasiPengabdianKepadaMasyarakat = () => {
+const InformasiKKNUNIM = () => {
   return (
     <div className="artikel-page mt-5">
       <div className="artikel min-vh-100">
@@ -76,11 +76,10 @@ const InformasiPengabdianKepadaMasyarakat = () => {
           <Row className="justify-content-center">
             <Col>
               <h1 className="text-center fw-bold animate__animated animate__fadeInUp animate__fast">
-                Informasi Pengabdian Kepada Masyarakat
+                Informasi KKN UNIM
               </h1>
               <p className="text-center animate__animated animate__fadeInUp animate__fast">
-                Jelajahi berbagai artikel dan informasi pengabdian kepada
-                masyarakat.
+                Jelajahi berbagai artikel dan informasi penelitian terbaru kami.
               </p>
             </Col>
           </Row>
@@ -110,4 +109,4 @@ const InformasiPengabdianKepadaMasyarakat = () => {
   );
 };
 
-export default InformasiPengabdianKepadaMasyarakat;
+export default InformasiKKNUNIM;

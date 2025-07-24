@@ -3,10 +3,15 @@ import Homepage from "./pages/Homepage";
 import Tentang from "./pages/Tentang";
 import PimpinanLembaga from "./pages/PimpinanLembaga";
 import PanduanPenelitian from "./pages/PanduanPenelitian";
+import PanduanPengabdianKepadaMasyarakat from "./pages/PanduanPengabdianKepadaMasyarakat";
 import ProgramPanduanPengabdianMasyarakatMandiri from "./pages/ProgramPanduanPengabdianMasyarakatMandiri";
+import InformasiPengabdianKepadaMasyarakat from "./pages/InformasiPengabdianKepadaMasyarakat";
+import SKPengabdianKepadaMasyarakat from "./pages/SKPengabdianKepadaMasyarakat";
+import DokumenPengabdianPadaMasyarakat from "./pages/DokumenPengabdianPadaMasyarakat";
 import StrukturOrganisasi from "./pages/StrukturOrganisasi";
 import DokumenPenelitian from "./pages/DokumenPenelitian";
 import InformasiPenelitian from "./pages/InformasiPenelitian";
+import InformasiKKNUNIM from "./pages/InformasiKKNUNIM";
 import SKRektor from "./pages/SKRektor";
 import Sepatupage from "./pages/Sepatupage";
 import Syarat from "./pages/Syarat";
@@ -18,6 +23,7 @@ import ProgramPengabdianMasyarakat from "./pages/ProgramPengabdianMasyarakat";
 import Login from "./pages/admin/login";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import RequireAuth from "./pages/admin/RequireAuth";
+import { panduanPengabdianKepadaMasyarakat } from "./data/panduanPengabdianKepadaMasyarakat";
 
 function App() {
   return (
@@ -69,6 +75,23 @@ function App() {
                   path="/informasi-penelitian"
                   Component={InformasiPenelitian}
                 />
+                <Route
+                  path="/panduan-pengabdian-kepada-masyarakat"
+                  Component={PanduanPengabdianKepadaMasyarakat}
+                />
+                <Route
+                  path="/informasi-pengabdian-pada-masyarakat"
+                  Component={InformasiPengabdianKepadaMasyarakat}
+                />
+                <Route
+                  path="/sk-pengabdian-pada-masyarakat"
+                  Component={SKPengabdianKepadaMasyarakat}
+                />
+                <Route
+                  path="/dokumen-pengabdian-pada-masyarakat"
+                  Component={DokumenPengabdianPadaMasyarakat}
+                />
+                <Route path="/informasi-kkn" Component={InformasiKKNUNIM} />
                 <Route path="/syarat" Component={Syarat} />
                 <Route path="/testi" Component={Testimonial} />
                 <Route path="/faq" Component={Faq} />
