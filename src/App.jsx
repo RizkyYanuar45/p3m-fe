@@ -38,29 +38,43 @@ function App() {
         element={
           <div>
             <Navbarcomp />
-            <Routes>
-              <Route path="/" Component={Homepage} />
-              <Route path="/tentang" Component={Tentang} />
-              <Route path="/pimpinan-lembaga" Component={PimpinanLembaga} />
-              <Route path="/struktur-organisasi" Component={StrukturOrganisasi} />
-              <Route path="/panduan-penelitian" Component={PanduanPenelitian} />
-              <Route path="/dokumen-penelitian" Component={DokumenPenelitian} />
-              <Route
-                path="/program-pengabdian-masyarakat"
-                Component={ProgramPengabdianMasyarakat}
-              />
-              <Route
-                path="/program-panduan-pengabdian-masyarakat-mandiri"
-                Component={ProgramPanduanPengabdianMasyarakatMandiri}
-              />
-              <Route path="/sk-rektor" Component={SKRektor} />
-              <Route path="/kelas" Component={Sepatupage} />
-              <Route path="/informasi-penelitian" Component={InformasiPenelitian} />
-              <Route path="/syarat" Component={Syarat} />
-              <Route path="/testi" Component={Testimonial} />
-              <Route path="/faq" Component={Faq} />
-            </Routes>
-            <Footercomp />
+            <div className="main-content">
+              <Routes>
+                <Route path="/" Component={Homepage} />
+                <Route path="/tentang" Component={Tentang} />
+                <Route path="/pimpinan-lembaga" Component={PimpinanLembaga} />
+                <Route
+                  path="/struktur-organisasi"
+                  Component={StrukturOrganisasi}
+                />
+                <Route
+                  path="/panduan-penelitian"
+                  Component={PanduanPenelitian}
+                />
+                <Route
+                  path="/dokumen-penelitian"
+                  Component={DokumenPenelitian}
+                />
+                <Route
+                  path="/program-pengabdian-masyarakat"
+                  Component={ProgramPengabdianMasyarakat}
+                />
+                <Route
+                  path="/program-panduan-pengabdian-masyarakat-mandiri"
+                  Component={ProgramPanduanPengabdianMasyarakatMandiri}
+                />
+                <Route path="/sk-rektor" Component={SKRektor} />
+                <Route path="/kelas" Component={Sepatupage} />
+                <Route
+                  path="/informasi-penelitian"
+                  Component={InformasiPenelitian}
+                />
+                <Route path="/syarat" Component={Syarat} />
+                <Route path="/testi" Component={Testimonial} />
+                <Route path="/faq" Component={Faq} />
+              </Routes>
+              <Footercomp />
+            </div>
           </div>
         }
       />

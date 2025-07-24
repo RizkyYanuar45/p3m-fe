@@ -37,7 +37,7 @@ export const navLinks = [
       { id: 1, path: "panduan-penelitian", text: "Panduan Penelitian" },
       { id: 2, path: "sk-rektor", text: "SK Rektor Penelitian" },
       { id: 3, path: "dokumen-penelitian", text: "Dokumen Penelitian" },
-      {id: 4, path: "informasi-penelitian", text: "Informasi Penelitian" },
+      { id: 4, path: "informasi-penelitian", text: "Informasi Penelitian" },
     ],
   },
   {
@@ -60,9 +60,21 @@ export const navLinks = [
         path: "panduan-pengabdian-kepada-masyarakat",
         text: "Panduan Pengabdian Kepada Masyarakat",
       },
-      { id: 4, path: "informasi-pengabdian-pada-masyarakat", text: "Informasi Pengabdian Kepada Masyarakat" },
-      { id: 5, path: "sk-pengabdian-pada-masyarakat", text: "SK Pengabdian Kepada Masyarakat" },
-      { id: 6, path: "dokumen-pengabdian-pada-masyarakat", text: "Dokumen Pengabdian Kepada Masyarakat" },
+      {
+        id: 4,
+        path: "informasi-pengabdian-pada-masyarakat",
+        text: "Informasi Pengabdian Kepada Masyarakat",
+      },
+      {
+        id: 5,
+        path: "sk-pengabdian-pada-masyarakat",
+        text: "SK Pengabdian Kepada Masyarakat",
+      },
+      {
+        id: 6,
+        path: "dokumen-pengabdian-pada-masyarakat",
+        text: "Dokumen Pengabdian Kepada Masyarakat",
+      },
     ],
   },
   {
@@ -78,18 +90,23 @@ export const navLinks = [
   },
   {
     id: 6,
-    path: "",
-    text: "Jurnal Layanan Masyarakat", 
+    path: "/jurnal",
+    text: "Jurnal Layanan Masyarakat",
   },
   {
     id: 7,
     path: "",
     text: "Kuisioner/Komplain",
     subMenu: [
-      { id: 1, path: "", text: "Penelitian" },
-      { id: 2, path: "", text: "Pengabdian Kepada Masyarakat" },
-      { id: 3, path: "", text: "KKN" },
+      { id: 1, path: "/kuispen", text: "Penelitian" },
+      { id: 2, path: "/kuispengab", text: "Pengabdian Kepada Masyarakat" },
+      { id: 3, path: "/kuiskkn", text: "KKN" },
     ],
+  },
+  {
+    id: 8,
+    path: "/hubungi-kami",
+    text: "Hubungi Kami",
   },
 ];
 

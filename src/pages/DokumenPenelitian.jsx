@@ -7,6 +7,7 @@ import {
   Button,
   ListGroup,
 } from "react-bootstrap";
+import Navbarcomp from "../components/Navbarcomp";
 import Herosection from "../components/Herosection";
 import Faqcomp from "../components/Faqcomp";
 
