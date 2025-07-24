@@ -4,6 +4,8 @@ import {
   NavDropdown,
   Offcanvas,
   Accordion,
+  Form,
+  Button,
 } from "react-bootstrap";
 import { navLinks } from "./../data/index";
 import { NavLink } from "react-router-dom";
@@ -43,28 +45,48 @@ function Navbarcomp() {
         sticky="top"
         style={{ paddingLeft: 0, paddingRight: 0 }}
       >
-        {/* Tata Letak & Branding tidak diubah */}
+        {/* === PERUBAHAN UTAMA DI SINI === */}
         <div className="d-none d-lg-block text-center">
           <Navbar.Brand className="navbar-logo my-2 d-inline-block">
             <NavLink
               to="/"
-              className="text-decoration-none fs-3 fw-bold text-dark d-flex align-items-center justify-content-center"
+              className="text-decoration-none text-dark d-flex align-items-center justify-content-center"
             >
               <img
                 src={logo}
                 alt="Logo Unim"
-                className="me-2"
-                style={{ width: "120px" }}
+                className="me-3" // Margin diubah agar seimbang
+                style={{ width: "90px" }} // Ukuran logo dikecilkan dari 120px
               />
-              <div className=" d-flex flex-column align-items-center justify-content-center">
-                <h1 className="fw-bold">P3M Universitas Islam Majapahit</h1>
-                <p className="fw-light">
-                  Pusat Penelitian, publikasi dan Pengabdian kepada Masyarakat
+              <div className="d-flex flex-column align-items-center text-center align-middle justify-content-center">
+                {/* Ukuran font dikecilkan menggunakan class fs-4 */}
+                <h1 className="fw-bold fs-4 mb-0">
+                  P3M Universitas Islam Majapahit
+                </h1>
+                {/* Ukuran font dikecilkan menggunakan class fs-6 */}
+                <p className="fw-light fs-6 text-start mb-0">
+                  Pusat Penelitian, Publikasi dan Pengabdian kepada Masyarakat
                 </p>
               </div>
             </NavLink>
           </Navbar.Brand>
         </div>
+        {/* === AKHIR PERUBAHAN === */}
+
+        {/* Search Bar Desktop */}
+        <div className="d-none d-lg-block w-75 px-4 mt-2 mb-3">
+          <Form className="d-flex">
+            <Form.Control
+              type="search"
+              placeholder="Cari Artikel Atau Informasi"
+              className="me-2 rounded-4 "
+              aria-label="Search"
+            />
+            <Button variant="primary">Cari</Button>
+          </Form>
+        </div>
+
+        {/* Branding Mobile (Tidak berubah) */}
         <div className="d-lg-none d-flex justify-content-between align-items-center w-100 px-3">
           <Navbar.Brand
             as={NavLink}
@@ -77,7 +99,9 @@ function Navbarcomp() {
               className="me-2"
               style={{ width: "70px" }}
             />
-            <h1 className="fw-bold mb-0 fs-6">P3M UNIM</h1>
+            <h1 className="fw-bold mb-0 fs-6">
+              P3M Universitas Islam Majapahit
+            </h1>
           </Navbar.Brand>
           <Navbar.Toggle
             aria-controls="offcanvas-navbar-nav"
@@ -85,7 +109,7 @@ function Navbarcomp() {
           />
         </div>
 
-        {/* --- OFFCANVAS --- */}
+        {/* Offcanvas (Tidak berubah) */}
         <Navbar.Offcanvas
           id="offcanvas-navbar-nav"
           aria-labelledby="offcanvas-navbar-label"
@@ -100,10 +124,19 @@ function Navbarcomp() {
           <Offcanvas.Body>
             {/* BLOK MENU KHUSUS MOBILE */}
             <div className="d-lg-none">
+              <div className="px-3 mb-3">
+                <Form className="d-flex">
+                  <Form.Control
+                    type="search"
+                    placeholder="Ketik pencarian..."
+                    className="me-2"
+                    aria-label="Search"
+                  />
+                  <Button variant="primary">Cari</Button>
+                </Form>
+              </div>
+
               <Nav className="justify-content-start flex-grow-1">
-                {/* Kita tidak lagi membungkus semuanya dengan Accordion.
-                  Accordion hanya digunakan untuk item yang punya submenu.
-                */}
                 {navLinks.map((data) => {
                   if (data.subMenu) {
                     return (
@@ -132,14 +165,11 @@ function Navbarcomp() {
                     );
                   }
                   return (
-                    // --- PERUBAHAN UTAMA DI SINI ---
-                    // Item menu biasa tanpa panah
                     <NavLink
                       key={data.id}
                       to={data.path}
                       onClick={handleCloseMenu}
                       className={({ isActive }) =>
-                        // Kelas padding py-3 dan px-4 ini menyamakan tingginya dengan Accordion.Header
                         "d-block py-3 px-4 text-decoration-none " +
                         (isActive ? "text-primary fw-bold" : "text-dark")
                       }
@@ -151,7 +181,7 @@ function Navbarcomp() {
               </Nav>
             </div>
 
-            {/* BLOK MENU KHUSUS DESKTOP (TIDAK BERUBAH) */}
+            {/* BLOK MENU KHUSUS DESKTOP */}
             <div className="d-none d-lg-block">
               <Nav className="mx-auto text-center">
                 {navLinks.map((data) => {
