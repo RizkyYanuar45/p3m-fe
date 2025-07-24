@@ -59,7 +59,7 @@ function Navbarcomp() {
               <div className=" d-flex flex-column align-items-center justify-content-center">
                 <h1 className="fw-bold">P3M Universitas Islam Majapahit</h1>
                 <p className="fw-light">
-                  Pusat Penelitian dan Pengabdian kepada Masyarakat
+                  Pusat Penelitian, publikasi dan Pengabdian kepada Masyarakat
                 </p>
               </div>
             </NavLink>
