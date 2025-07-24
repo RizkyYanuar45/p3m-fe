@@ -1,4 +1,6 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
+// Import komponen React-Bootstrap
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Homepage from "./pages/Homepage";
 import Tentang from "./pages/Tentang";
 import PimpinanLembaga from "./pages/PimpinanLembaga";
@@ -7,6 +9,11 @@ import PanduanPengabdianKepadaMasyarakat from "./pages/PanduanPengabdianKepadaMa
 import ProgramPanduanPengabdianMasyarakatMandiri from "./pages/ProgramPanduanPengabdianMasyarakatMandiri";
 import InformasiPengabdianKepadaMasyarakat from "./pages/InformasiPengabdianKepadaMasyarakat";
 import SKPengabdianKepadaMasyarakat from "./pages/SKPengabdianKepadaMasyarakat";
+import BukuPanduanKKNTematik from "./pages/BukuPanduanKKNTematik";
+import BukuPanduanKKNPMM from "./pages/BukuPanduanKKNPMM";
+import SKKKNTematikUNIM from "./pages/SKKKNTematikUNIM";
+import SKKKNPMMUNIM from "./pages/SKKKNPMMUNIM";
+import ProgramKKNUNIM from "./pages/ProgramKKNUNIM";
 import DokumenPengabdianPadaMasyarakat from "./pages/DokumenPengabdianPadaMasyarakat";
 import StrukturOrganisasi from "./pages/StrukturOrganisasi";
 import DokumenPenelitian from "./pages/DokumenPenelitian";
@@ -23,12 +30,27 @@ import ProgramPengabdianMasyarakat from "./pages/ProgramPengabdianMasyarakat";
 import Login from "./pages/admin/login";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import RequireAuth from "./pages/admin/RequireAuth";
-import { panduanPengabdianKepadaMasyarakat } from "./data/panduanPengabdianKepadaMasyarakat";
+import NotFoundPage from "./pages/NotFoundPage";
+import ArticlePage from "./pages/ArticlePage";
+
+// Komponen Layout untuk halaman publik yang memiliki Navbar dan Footer
+const PublicLayout = () => {
+  return (
+    <div>
+      <Navbarcomp />
+      <main className="main-content">
+        {/* Komponen anak (halaman) akan dirender di sini */}
+        <Outlet />
+      </main>
+      <Footercomp />
+    </div>
+  );
+};
 
 function App() {
   return (
     <Routes>
-      {/* Route admin tanpa Navbar/Footer */}
+      {/* Rute Admin (tanpa Navbar/Footer publik) */}
       <Route path="/admin/login" element={<Login />} />
       <Route
         path="/admin"
@@ -38,69 +60,62 @@ function App() {
           </RequireAuth>
         }
       />
-      {/* Route publik dengan Navbar/Footer */}
-      <Route
-        path="*"
-        element={
-          <div>
-            <Navbarcomp />
-            <div className="main-content">
-              <Routes>
-                <Route path="/" Component={Homepage} />
-                <Route path="/tentang" Component={Tentang} />
-                <Route path="/pimpinan-lembaga" Component={PimpinanLembaga} />
-                <Route
-                  path="/struktur-organisasi"
-                  Component={StrukturOrganisasi}
-                />
-                <Route
-                  path="/panduan-penelitian"
-                  Component={PanduanPenelitian}
-                />
-                <Route
-                  path="/dokumen-penelitian"
-                  Component={DokumenPenelitian}
-                />
-                <Route
-                  path="/program-pengabdian-masyarakat"
-                  Component={ProgramPengabdianMasyarakat}
-                />
-                <Route
-                  path="/program-panduan-pengabdian-masyarakat-mandiri"
-                  Component={ProgramPanduanPengabdianMasyarakatMandiri}
-                />
-                <Route path="/sk-rektor" Component={SKRektor} />
-                <Route path="/kelas" Component={Sepatupage} />
-                <Route
-                  path="/informasi-penelitian"
-                  Component={InformasiPenelitian}
-                />
-                <Route
-                  path="/panduan-pengabdian-kepada-masyarakat"
-                  Component={PanduanPengabdianKepadaMasyarakat}
-                />
-                <Route
-                  path="/informasi-pengabdian-pada-masyarakat"
-                  Component={InformasiPengabdianKepadaMasyarakat}
-                />
-                <Route
-                  path="/sk-pengabdian-pada-masyarakat"
-                  Component={SKPengabdianKepadaMasyarakat}
-                />
-                <Route
-                  path="/dokumen-pengabdian-pada-masyarakat"
-                  Component={DokumenPengabdianPadaMasyarakat}
-                />
-                <Route path="/informasi-kkn" Component={InformasiKKNUNIM} />
-                <Route path="/syarat" Component={Syarat} />
-                <Route path="/testi" Component={Testimonial} />
-                <Route path="/faq" Component={Faq} />
-              </Routes>
-              <Footercomp />
-            </div>
-          </div>
-        }
-      />
+
+      {/* Grup Rute Publik (semua yang ada di sini akan memiliki Navbar & Footer) */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" Component={Homepage} />
+        <Route path="/tentang" Component={Tentang} />
+        <Route path="/pimpinan-lembaga" Component={PimpinanLembaga} />
+        <Route path="/struktur-organisasi" Component={StrukturOrganisasi} />
+        <Route path="/panduan-penelitian" Component={PanduanPenelitian} />
+        <Route path="/dokumen-penelitian" Component={DokumenPenelitian} />
+        <Route
+          path="/program-pengabdian-masyarakat"
+          Component={ProgramPengabdianMasyarakat}
+        />
+        <Route
+          path="/program-panduan-pengabdian-masyarakat-mandiri"
+          Component={ProgramPanduanPengabdianMasyarakatMandiri}
+        />
+        <Route path="/sk-rektor" Component={SKRektor} />
+        <Route path="/kelas" Component={Sepatupage} />
+        <Route path="/informasi-penelitian" Component={InformasiPenelitian} />
+        <Route
+          path="/panduan-pengabdian-kepada-masyarakat"
+          Component={PanduanPengabdianKepadaMasyarakat}
+        />
+        <Route
+          path="/informasi-pengabdian-pada-masyarakat"
+          Component={InformasiPengabdianKepadaMasyarakat}
+        />
+        <Route
+          path="/sk-pengabdian-pada-masyarakat"
+          Component={SKPengabdianKepadaMasyarakat}
+        />
+        <Route
+          path="/dokumen-pengabdian-pada-masyarakat"
+          Component={DokumenPengabdianPadaMasyarakat}
+        />
+        {/* Sub-menu KKN */}
+        <Route path="/informasi-kkn" Component={InformasiKKNUNIM} />
+        <Route path="/program-kkn-unim" Component={ProgramKKNUNIM} />
+        <Route
+          path="/buku-panduan-kkn-tematik"
+          Component={BukuPanduanKKNTematik}
+        />
+
+        <Route path="/sk-kkn-tematik-unim" Component={SKKKNTematikUNIM} />
+        <Route path="/buku-panduan-kkn-pmm" Component={BukuPanduanKKNPMM} />
+        <Route path="/sk-kkn-pmm-unim" Component={SKKKNPMMUNIM} />
+        {/* akhir sub menu kkn */}
+        <Route path="/article" Component={ArticlePage} />
+        <Route path="/syarat" Component={Syarat} />
+        <Route path="/testi" Component={Testimonial} />
+        <Route path="/faq" Component={Faq} />
+      </Route>
+
+      {/* Rute Catch-all untuk halaman 404 Not Found. Diletakkan di paling akhir. */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

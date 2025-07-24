@@ -84,13 +84,23 @@ export const navLinks = [
     subMenu: [
       { id: 1, path: "informasi-kkn", text: "Informasi KKN UNIM" },
       { id: 2, path: "program-kkn-unim", text: "Program KKN UNIM" },
-      { id: 3, path: "buku-panduan-kkn-bbm", text: "Buku Panduan KKN BBM" },
-      { id: 4, path: "sk-kkn-bbm-unim", text: "SK KKN BBM UNIM" },
+      {
+        id: 3,
+        path: "buku-panduan-kkn-tematik",
+        text: "Buku Panduan KKN Tematik",
+      },
+      { id: 4, path: "sk-kkn-tematik-unim", text: "SK KKN Tematik UNIM" },
+      {
+        id: 5,
+        path: "buku-panduan-kkn-pmm",
+        text: "Buku Panduan KKN PMM",
+      },
+      { id: 6, path: "sk-kkn-pmm-unim", text: "SK KKN PMM UNIM" },
     ],
   },
   {
     id: 6,
-    path: "/jurnal",
+    path: "https://ejurnal.unim.ac.id/index.php/abdimasnusantara",
     text: "Jurnal Layanan Masyarakat",
   },
   {

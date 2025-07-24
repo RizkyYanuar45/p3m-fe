@@ -24,24 +24,27 @@ const SKRektor = () => {
           <Row>
             <Col>
               <div className="timeline-bs">
-                {skRektor.map((item) => (
-                  <div key={item.id} className="timeline-item">
-                    <div className="timeline-content shadow-sm">
-                      <time>{item.date}</time>
-                      <h3 className="fw-bold">{item.title}</h3>
-                      <p>{item.description}</p>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        href={item.urlDrive}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Lihat Dokumen
-                      </Button>
+                {skRektor
+                  .slice()
+                  .reverse()
+                  .map((item) => (
+                    <div key={item.id} className="timeline-item">
+                      <div className="timeline-content shadow-sm">
+                        <time>{item.date}</time>
+                        <h3 className="fw-bold">{item.title}</h3>
+                        <p>{item.description}</p>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          href={item.urlDrive}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Lihat Dokumen
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </Col>
           </Row>

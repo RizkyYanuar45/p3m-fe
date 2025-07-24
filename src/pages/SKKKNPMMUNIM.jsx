@@ -1,32 +1,30 @@
-import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import Herosection from "../components/Herosection";
 import Faqcomp from "../components/Faqcomp";
-import { skRektor } from "./../data/skRektor";
+import { panduanPenelitian } from "../data/panduanPenelitian"; // Impor data panduan
 
-const SKPengabdianKepadaMasyarakat = () => {
+const SKKKNPMMUNIM = () => {
   return (
     <div className="panduan-page">
-      <Herosection title={"SK Pengabdian Kepada Masyarakat<"} />
+      <Herosection title={"SK KKN Tematik UNIM"} />
 
       <div className="timeline-wrapper py-5">
         <Container>
           <Row className="text-center mb-5">
             <Col>
-              <h1 className="fw-bold">SK Pengabdian Kepada Masyarakat</h1>
-              <p className="text-muted">
-                Kumpulan dokumen SK Pengabdian Kepada Masyarakat
-              </p>
+              <h1 className="fw-bold">SK KKN PMM UNIM</h1>
+              <p className="text-muted">Kumpulan SK KKN PMM UNIM</p>
             </Col>
           </Row>
           <Row>
             <Col>
               <div className="timeline-bs">
-                {skRektor
+                {/* The .slice() method is used to create a shallow copy of the array before reversing it to avoid mutating the original data. Then, .reverse() is called to invert the order of the items. The key prop is now the last attribute of the timeline-item div. */}
+                {panduanPenelitian
                   .slice()
                   .reverse()
                   .map((item) => (
-                    <div key={item.id} className="timeline-item">
+                    <div className="timeline-item" key={item.id}>
                       <div className="timeline-content shadow-sm">
                         <time>{item.date}</time>
                         <h3 className="fw-bold">{item.title}</h3>
@@ -54,4 +52,4 @@ const SKPengabdianKepadaMasyarakat = () => {
   );
 };
 
-export default SKPengabdianKepadaMasyarakat;
+export default SKKKNPMMUNIM;
