@@ -19,6 +19,11 @@ import CrudInformasiKKN from './CrudInformasiKKN';
 
 import CrudJurnalLayananMasyarakat from './CrudJurnalLayananMasyarakat';
 import CrudKuisioner from './CrudKuisioner';
+import CrudProgramKKNUnim from './CrudProgramKKNUnim';
+import CrudBukuPanduanKKNPMM from './CrudBukuPanduanKKNPMM';
+import CrudBukuPanduanKKNTematik from './CrudBukuPanduanKKNTematik';
+import CrudSKKKNTematik from './CrudSKKKNTematik';
+import CrudSKKKNPMM from './CrudSKKKNPMM';
 
 
 
@@ -74,9 +79,11 @@ const menuList = [
     label: 'Kelola Kuliah Kerja Nyata',
     submenus: [
       { key: 'informasiKKN', label: 'Informasi KKN UNIM', component: <CrudInformasiKKN /> },
-      { key: 'programKKN', label: 'Program KKN UNIM', component: <CrudKelolaKKN kategori="program" /> },
-      { key: 'bukuPanduanKKN', label: 'Buku Panduan KKN BBM', component: <CrudKelolaKKN kategori="bukuPanduan" /> },
-      { key: 'skKKN', label: 'SK KKN BBM UNIM', component: <CrudKelolaKKN kategori="sk" /> },
+      { key: 'programKKN', label: 'Program KKN UNIM', component: <CrudProgramKKNUnim /> },
+      { key: 'bukupanduankkntematik', label: 'Buku Panduan KKN Tematik', component: <CrudBukuPanduanKKNTematik /> },
+      { key: 'skKKNTematik', label: 'SK KKN Tematik UNIM', component: <CrudSKKKNTematik /> },
+      { key: 'bukupanduankknpmm', label: 'Buku Panduan KKN PMM', component: <CrudBukuPanduanKKNPMM /> },
+      { key: 'skKKNPMM', label: 'SK KKN PMM UNIM', component: <CrudSKKKNPMM /> },
     ],
   },
 

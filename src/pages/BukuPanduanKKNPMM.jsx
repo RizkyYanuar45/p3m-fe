@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import Herosection from "../components/Herosection";
 import Faqcomp from "../components/Faqcomp";
-import { panduanPenelitian } from "../data/panduanPenelitian"; // Impor data panduan
+import { bukupanduankknpmm } from "../data/bukupanduankknpmm";
 
 const BukuPanduanKKNPMM = () => {
   return (
@@ -23,10 +23,10 @@ const BukuPanduanKKNPMM = () => {
             <Col>
               <div className="timeline-bs">
                 {/* The .slice() method is used to create a shallow copy of the array before reversing it to avoid mutating the original data. Then, .reverse() is called to invert the order of the items. The key prop is now the last attribute of the timeline-item div. */}
-                {panduanPenelitian
-                  .slice()
-                  .reverse()
-                  .map((item) => (
+    {bukupanduankknpmm
+      .slice()
+      .reverse()
+      .map((item) => (
                     <div className="timeline-item" key={item.id}>
                       <div className="timeline-content shadow-sm">
                         <time>{item.date}</time>
