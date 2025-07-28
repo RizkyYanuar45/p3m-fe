@@ -23,7 +23,6 @@ import CrudProgramKKNUnim from './CrudProgramKKNUnim';
 import CrudBukuPanduanKKNPMM from './CrudBukuPanduanKKNPMM';
 import CrudBukuPanduanKKNTematik from './CrudBukuPanduanKKNTematik';
 import CrudSKKKNTematik from './CrudSKKKNTematik';
-import CrudSKKKNPMM from './CrudSKKKNPMM';
 
 
 
@@ -69,7 +68,7 @@ const menuList = [
   },
   {
     key: 'jurnalLayananMasyarakat',
-    label: 'Kelola Jurnal Layanan Masyarakat',
+    label: 'Kelola Jurnal',
     submenus: [
       { key: 'jurnalLayananMasyarakat', label: 'Link Jurnal Layanan Masyarakat', component: <CrudJurnalLayananMasyarakat /> },
     ],
@@ -83,13 +82,14 @@ const menuList = [
       { key: 'bukupanduankkntematik', label: 'Buku Panduan KKN Tematik', component: <CrudBukuPanduanKKNTematik /> },
       { key: 'skKKNTematik', label: 'SK KKN Tematik UNIM', component: <CrudSKKKNTematik /> },
       { key: 'bukupanduankknpmm', label: 'Buku Panduan KKN PMM', component: <CrudBukuPanduanKKNPMM /> },
-      { key: 'skKKNPMM', label: 'SK KKN PMM UNIM', component: <CrudSKKKNPMM /> },
+      { key: 'skKKNPMM', label: 'SK KKN PMM UNIM', component: <CrudSKKKNTematik /> },
     ],
   },
 
 ];
 
 const DashboardAdmin = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(menuList[0].key);
   const [activeSubmenu, setActiveSubmenu] = useState(menuList[0].submenus[0].key);
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -103,9 +103,39 @@ const DashboardAdmin = () => {
   const currentSubmenu = currentMenu?.submenus.find((s) => s.key === activeSubmenu);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#e9ecef', display: 'flex', fontFamily: 'Segoe UI, Arial, sans-serif' }}>
+    <>
+      <style>{`
+        .dashboard-admin { min-width: 320px; min-height: 100vh; overflow-x: auto; }
+        .dashboard-sidebar { min-width: 220px; max-width: 100vw; overflow-y: auto; }
+        .dashboard-content { min-width: 320px; }
+        @media (max-width: 900px) {
+          .dashboard-admin { flex-direction: column !important; }
+          .dashboard-sidebar { width: 100vw !important; min-height: unset !important; position: relative !important; box-shadow: none !important; border-bottom: 2px solid #ffb300 !important; }
+          .dashboard-content { padding: 16px !important; }
+        }
+        @media (max-width: 600px) {
+          .dashboard-admin { flex-direction: column !important; }
+          .dashboard-sidebar { width: 100vw !important; min-height: unset !important; position: fixed !important; left: 0; top: 0; z-index: 1000; height: 100vh !important; transform: translateX(-100vw); transition: transform 0.3s; overflow-y: auto; }
+          .dashboard-sidebar.open { transform: translateX(0); }
+          .dashboard-content { padding: 8px !important; }
+          .dashboard-topbar { font-size: 16px !important; padding: 12px 8px 8px 8px !important; }
+          .dashboard-hamburger { display: block !important; position: fixed; right: 16px; top: 16px; z-index: 1100; background: #ffb300; border: none; border-radius: 4px; width: 40px; height: 40px; justify-content: center; align-items: center; }
+        }
+        .dashboard-hamburger { display: none; }
+      `}</style>
+      <div className="dashboard-admin" style={{ minHeight: '100vh', background: '#e9ecef', display: 'flex', fontFamily: 'Segoe UI, Arial, sans-serif', overflowX: 'auto' }}>
+        {/* Hamburger menu for mobile */}
+        <button className="dashboard-hamburger" onClick={() => setSidebarOpen(!sidebarOpen)} style={{right: 16, left: 'unset', top: 16, position: 'fixed', zIndex: 1100, background: '#ffb300', border: 'none', borderRadius: 4, width: 40, height: 40, justifyContent: 'center', alignItems: 'center', display: window.innerWidth <= 600 ? 'flex' : 'none'}}>
+          <span style={{ fontSize: 28, color: '#222d32' }}>&#9776;</span>
+        </button>
+        {/* Overlay for mobile sidebar */}
+        {sidebarOpen && <div style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh', background: '#0008', zIndex: 999 }} onClick={() => setSidebarOpen(false)}></div>}
       {/* Sidebar */}
-      <div style={{ width: 260, background: '#222d32', color: '#fff', display: 'flex', flexDirection: 'column', minHeight: '100vh', boxShadow: '2px 0 8px #0001' }}>
+      <div className={`dashboard-sidebar${sidebarOpen ? ' open' : ''}`} style={{ width: 260, background: '#222d32', color: '#fff', display: 'flex', flexDirection: 'column', minHeight: '100vh', boxShadow: '2px 0 8px #0001', overflowY: 'auto', maxWidth: '100vw' }}>
+        {/* Close button for mobile sidebar */}
+        <button style={{ display: 'none', position: 'absolute', right: 16, top: 16, background: '#e53935', color: '#fff', border: 'none', borderRadius: 4, fontSize: 24, zIndex: 1101 }} className="dashboard-close-sidebar" onClick={() => setSidebarOpen(false)}>
+          &times;
+        </button>
         <div style={{ padding: '32px 0 24px 0', textAlign: 'center', fontWeight: 700, fontSize: 24, letterSpacing: 2, background: '#1a2226', borderBottom: '2px solid #ffb300', color: '#ffb300' }}>
           Admin P3M UNIM
         </div>
@@ -135,6 +165,8 @@ const DashboardAdmin = () => {
                       setActiveMenu(menu.key);
                       setActiveSubmenu(menu.submenus[0].key);
                       if (isDropdown) setOpenDropdown(openDropdown === menu.key ? null : menu.key);
+                      // Tutup sidebar jika di mobile untuk menu tanpa dropdown
+                      if ((menu.key === 'pimpinanLembaga' || menu.key === 'jurnalLayananMasyarakat') && window.innerWidth <= 600) setSidebarOpen(false);
                     }}
                     style={{ flex: 1 }}
                   >
@@ -172,7 +204,11 @@ const DashboardAdmin = () => {
                     {menu.submenus.map((submenu) => (
                       <div
                         key={submenu.key}
-                        onClick={() => setActiveSubmenu(submenu.key)}
+                        onClick={() => {
+                          setActiveSubmenu(submenu.key);
+                          // Tutup sidebar jika di mobile
+                          if (window.innerWidth <= 600) setSidebarOpen(false);
+                        }}
                         style={{
                           padding: '10px 48px',
                           background: activeSubmenu === submenu.key ? '#1976d2' : 'transparent',
@@ -213,9 +249,9 @@ const DashboardAdmin = () => {
         </div>
       </div>
       {/* Main Content */}
-      <div style={{ flex: 1, minHeight: '100vh', background: '#fff', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, minHeight: '100vh', background: '#fff', display: 'flex', flexDirection: 'column', minWidth: '320px' }}>
         {/* Topbar/Header */}
-        <div style={{ background: '#fff', borderBottom: '2px solid #e9ecef', padding: '24px 32px 16px 32px', fontSize: 22, fontWeight: 700, color: '#1976d2', letterSpacing: 2 }}>
+        <div className="dashboard-topbar" style={{ background: '#fff', borderBottom: '2px solid #e9ecef', padding: '24px 32px 16px 32px', fontSize: 22, fontWeight: 700, color: '#1976d2', letterSpacing: 2 }}>
           {currentMenu?.label} {currentSubmenu && currentMenu.submenus.length > 1 ? ' - ' + currentSubmenu.label : ''}
         </div>
         {/* Content */}
@@ -224,6 +260,7 @@ const DashboardAdmin = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

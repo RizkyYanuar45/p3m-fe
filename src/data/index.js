@@ -17,7 +17,7 @@ export const navLinks = [
     id: 1,
     title: "Dashboard",
     path: "/",
-    text: "Dashboard",
+    text: "Beranda",
   },
   {
     id: 2,
@@ -101,7 +101,7 @@ export const navLinks = [
   {
     id: 6,
     path: "https://ejurnal.unim.ac.id/index.php/abdimasnusantara",
-    text: "Jurnal Layanan Masyarakat",
+    text: "Jurnal",
   },
   {
     id: 7,
