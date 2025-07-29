@@ -13,6 +13,7 @@ import CrudDokumenPengabdian from './CrudDokumenPengabdian';
 
 import CrudInformasiPenelitian from './CrudInformasiPenelitian';
 import CrudProgramPanduanPengabdianMasyarakatMandiri from './CrudProgramPanduanPengabdianMasyarakatMandiri';
+import CrudStrukturOrganisasi from './CrudStrukturOrganisasi';
 
 import CrudKelolaKKN from './CrudKelolaKKN';
 import CrudInformasiKKN from './CrudInformasiKKN';
@@ -32,7 +33,7 @@ const menuList = [
     key: 'pimpinanLembaga',
     label: 'Profil Pimpinan',
     submenus: [
-      { key: 'pimpinanLembaga', label: 'Kelola Pimpinan', component: <CrudPimpinanLembaga /> },
+      { key: 'pimpinanLembaga', label: 'Upload Foto Pimpinan', component: <CrudPimpinanLembaga /> },
     ],
   },
   {
@@ -49,8 +50,6 @@ const menuList = [
     key: 'program',
     label: 'Pengabdian Kepada Masyarakat',
     submenus: [
-      { key: 'programPengabdian', label: 'Program Pengabdian Masyarakat', component: <CrudProgramPengabdianMasyarakat /> },
-      { key: 'programPanduanPengabdian', label: 'Panduan Pengabdian Masyarakat', component: <CrudProgramPanduanPengabdianMasyarakat /> },
       { key: 'programPanduanPengabdianMandiri', label: 'Program Pengabdian Masyarakat Mandiri', component: <CrudProgramPanduanPengabdianMasyarakatMandiri /> },
       { key: 'informasiPengabdian', label: 'Informasi Pengabdian Kepada Masyarakat', component: <CrudInformasiPengabdian /> },
       { key: 'skPengabdian', label: 'SK Pengabdian Kepada Masyarakat', component: <CrudSKPengabdian /> },
@@ -67,10 +66,10 @@ const menuList = [
     ],
   },
   {
-    key: 'jurnalLayananMasyarakat',
-    label: 'Kelola Jurnal',
+    key: 'strukturOrganisasi',
+    label: 'Struktur Organisasi',
     submenus: [
-      { key: 'jurnalLayananMasyarakat', label: 'Link Jurnal Layanan Masyarakat', component: <CrudJurnalLayananMasyarakat /> },
+      { key: 'strukturOrganisasi', label: 'Upload Struktur Organisasi', component: <CrudStrukturOrganisasi /> },
     ],
   },
   {
@@ -78,7 +77,6 @@ const menuList = [
     label: 'Kelola Kuliah Kerja Nyata',
     submenus: [
       { key: 'informasiKKN', label: 'Informasi KKN UNIM', component: <CrudInformasiKKN /> },
-      { key: 'programKKN', label: 'Program KKN UNIM', component: <CrudProgramKKNUnim /> },
       { key: 'bukupanduankkntematik', label: 'Buku Panduan KKN Tematik', component: <CrudBukuPanduanKKNTematik /> },
       { key: 'skKKNTematik', label: 'SK KKN Tematik UNIM', component: <CrudSKKKNTematik /> },
       { key: 'bukupanduankknpmm', label: 'Buku Panduan KKN PMM', component: <CrudBukuPanduanKKNPMM /> },

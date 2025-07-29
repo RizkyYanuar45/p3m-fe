@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const CrudPimpinanLembaga = () => {
+const CrudStrukturOrganisasi = () => {
   const [images, setImages] = useState([]);
   const [file, setFile] = useState(null);
 
@@ -19,7 +19,7 @@ const CrudPimpinanLembaga = () => {
 
   return (
     <div>
-      <h3>Pimpinan Lembaga - Upload Foto</h3>
+      <h3>Struktur Organisasi - Upload Foto</h3>
       <form onSubmit={handleUpload} style={{ marginBottom: 16 }}>
         <input
           type="file"
@@ -42,4 +42,4 @@ const CrudPimpinanLembaga = () => {
   );
 };
 
-export default CrudPimpinanLembaga;
+export default CrudStrukturOrganisasi;
