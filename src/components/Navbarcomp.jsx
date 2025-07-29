@@ -100,7 +100,8 @@ function Navbarcomp() {
               style={{ width: "70px" }}
             />
             <h1 className="fw-bold mb-0 fs-6">
-              P3M Universitas Islam Majapahit
+              P3M <span className=" d-block">Universitas </span>
+              <span className=" d-block">Islam Majapahit</span>
             </h1>
           </Navbar.Brand>
           <Navbar.Toggle
@@ -136,7 +137,7 @@ function Navbarcomp() {
                 </Form>
               </div>
 
-              <Nav className="justify-content-start flex-grow-1">
+              <Nav className="justify-content-start flex-grow-1 z-3">
                 {navLinks.map((data) => {
                   if (data.subMenu) {
                     return (

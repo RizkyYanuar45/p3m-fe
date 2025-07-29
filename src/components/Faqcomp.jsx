@@ -4,7 +4,7 @@ import { faq } from "../data/index";
 
 function Faqcomp() {
   return (
-    <div className="faq">
+    <div className="faq z-0">
       <Container>
         <Row>
           <Col>

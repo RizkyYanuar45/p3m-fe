@@ -10,6 +10,7 @@ import ProgramPanduanPengabdianMasyarakatMandiri from "./pages/ProgramPanduanPen
 import InformasiPengabdianKepadaMasyarakat from "./pages/InformasiPengabdianKepadaMasyarakat";
 import SKPengabdianKepadaMasyarakat from "./pages/SKPengabdianKepadaMasyarakat";
 import BukuPanduanKKNTematik from "./pages/BukuPanduanKKNTematik";
+
 import BukuPanduanKKNPMM from "./pages/BukuPanduanKKNPMM";
 import SKKKNTematikUNIM from "./pages/SKKKNTematikUNIM";
 import SKKKNPMMUNIM from "./pages/SKKKNPMMUNIM";
@@ -32,6 +33,7 @@ import DashboardAdmin from "./pages/admin/DashboardAdmin";
 import RequireAuth from "./pages/admin/RequireAuth";
 import NotFoundPage from "./pages/NotFoundPage";
 import ArticlePage from "./pages/ArticlePage";
+import SearchPage from "./pages/SearchPage";
 
 // Komponen Layout untuk halaman publik yang memiliki Navbar dan Footer
 const PublicLayout = () => {
@@ -109,6 +111,7 @@ function App() {
         <Route path="/sk-kkn-pmm-unim" Component={SKKKNPMMUNIM} />
         {/* akhir sub menu kkn */}
         <Route path="/article" Component={ArticlePage} />
+        <Route path="/search-page" Component={SearchPage} />
         <Route path="/syarat" Component={Syarat} />
         <Route path="/testi" Component={Testimonial} />
         <Route path="/faq" Component={Faq} />

@@ -41,7 +41,7 @@ const Login = () => {
           background: `url('/backgroundbatikmegamendung.png') center center / cover no-repeat`,
           filter: "blur(2.5px)",
           opacity: 0.7,
-          transition: 'opacity 0.3s',
+          transition: "opacity 0.3s",
         }}
       />
       <div

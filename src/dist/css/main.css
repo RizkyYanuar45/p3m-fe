@@ -39,13 +39,6 @@
   white-space: nowrap;
 }
 
-.navbar .nav-link .active {
-  background-color: var(--secondary-color);
-  color: var(--navbar-color-text);
-}
-.navbar .nav-link .active:hover {
-  color: var(--navbar-color);
-}
 .navbar.color-active {
   background-color: var(--navbar-color) !important;
   padding: 20px 0 20px 0 !important;
