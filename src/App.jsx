@@ -24,6 +24,7 @@ import SKRektor from "./pages/SKRektor";
 import Sepatupage from "./pages/Sepatupage";
 import Syarat from "./pages/Syarat";
 import Testimonial from "./pages/Testimonial";
+import HubungiKami from "./pages/HubungiKami";
 import Faq from "./pages/Faq";
 import Footercomp from "./components/Footercomp";
 import Navbarcomp from "./components/Navbarcomp";
@@ -105,7 +106,6 @@ function App() {
           path="/buku-panduan-kkn-tematik"
           Component={BukuPanduanKKNTematik}
         />
-
         <Route path="/sk-kkn-tematik-unim" Component={SKKKNTematikUNIM} />
         <Route path="/buku-panduan-kkn-pmm" Component={BukuPanduanKKNPMM} />
         <Route path="/sk-kkn-pmm-unim" Component={SKKKNPMMUNIM} />
@@ -115,6 +115,7 @@ function App() {
         <Route path="/syarat" Component={Syarat} />
         <Route path="/testi" Component={Testimonial} />
         <Route path="/faq" Component={Faq} />
+        <Route path="/hubungi-kami" Component={HubungiKami} />
       </Route>
 
       {/* Rute Catch-all untuk halaman 404 Not Found. Diletakkan di paling akhir. */}

@@ -2,17 +2,50 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const api = import.meta.env.VITE_API_URL;
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (username === "admin" && password === "admin12345") {
+    setLoading(true);
+    setError("");
+
+    try {
+      // Kirim request POST menggunakan fetch
+      const response = await fetch(`${api}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        credentials: "include", // PENTING: agar browser mengirim dan menerima cookie
+      });
+
+      // Ambil data JSON dari respons
+      const data = await response.json();
+
+      // fetch tidak melempar error untuk status 4xx/5xx, jadi kita periksa manual
+      if (!response.ok) {
+        // Lemparkan error agar bisa ditangkap oleh blok catch
+        throw new Error(data.message || "Terjadi kesalahan.");
+      }
+
+      // Jika login berhasil
       sessionStorage.setItem("isLoggedIn", "true");
+      sessionStorage.setItem("admin", JSON.stringify(data.admin));
       navigate("/admin");
-    } else {
-      alert("Username atau password salah!");
+    } catch (err) {
+      // Tangkap error jaringan atau error yang kita lempar di atas
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -21,12 +54,12 @@ const Login = () => {
       style={{
         minHeight: "100vh",
         width: "100vw",
-        background: `url('/backgroundbatikmegamendung.png') center center / cover no-repeat, radial-gradient(circle at 70% 60%, #ffb300 0%, #e53935 60%, #7b1fa2 100%)`,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         position: "relative",
+        background: `url('/backgroundbatikmegamendung.png') center center / cover no-repeat, radial-gradient(circle at 70% 60%, #ffb300 0%, #e53935 60%, #7b1fa2 100%)`,
       }}
     >
       {/* Background image and overlay */}
@@ -52,7 +85,7 @@ const Login = () => {
           width: "100vw",
           height: "100vh",
           zIndex: 1,
-          background: "rgba(0,0,0,0.55)", // overlay lebih gelap
+          background: "rgba(0,0,0,0.55)",
           backdropFilter: "blur(1.5px)",
         }}
       />
@@ -61,7 +94,6 @@ const Login = () => {
         style={{
           minWidth: 380,
           background: "rgba(60,0,0,0.55)",
-          borderRadius: 0,
           boxShadow: "0 8px 32px #0005",
           display: "flex",
           flexDirection: "column",
@@ -79,8 +111,6 @@ const Login = () => {
             fontWeight: 700,
             fontSize: 28,
             letterSpacing: 6,
-            borderTopLeftRadius: 2,
-            borderTopRightRadius: 2,
             textAlign: "left",
           }}
         >
@@ -111,12 +141,12 @@ const Login = () => {
                 fontWeight: 500,
               }}
             >
-              UserName
+              Email
             </label>
             <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               style={{
                 width: "100%",
                 background: "transparent",
@@ -126,9 +156,9 @@ const Login = () => {
                 fontSize: 18,
                 padding: "8px 0",
                 outline: "none",
-                marginBottom: 8,
               }}
               autoFocus
+              required
             />
           </div>
           <div style={{ marginBottom: 32 }}>
@@ -154,32 +184,49 @@ const Login = () => {
                 fontSize: 18,
                 padding: "8px 0",
                 outline: "none",
-                marginBottom: 8,
               }}
+              required
             />
           </div>
         </div>
+
+        {/* Menampilkan pesan error jika ada */}
+        {error && (
+          <div
+            style={{
+              color: "#ffcdd2",
+              background: "#c62828",
+              padding: "10px",
+              width: "90%",
+              textAlign: "center",
+              marginBottom: "16px",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
         <button
           type="submit"
+          disabled={loading}
           style={{
             width: "90%",
             margin: "0 auto",
             marginTop: 16,
             marginBottom: 32,
-            background: "#fff",
+            background: loading ? "#ccc" : "#fff",
             color: "#e6ae22ff",
             fontWeight: 500,
             fontSize: 28,
             border: "none",
-            borderRadius: 0,
             padding: "12px 0",
             letterSpacing: 2,
-            cursor: "pointer",
+            cursor: loading ? "not-allowed" : "pointer",
             boxShadow: "0 2px 8px #0002",
             transition: "background 0.2s",
           }}
         >
-          SIGN IN
+          {loading ? "LOADING..." : "SIGN IN"}
         </button>
       </form>
       <div
@@ -201,4 +248,3 @@ const Login = () => {
 };
 
 export default Login;
-// This code defines a modern and attractive login page for an admin interface using React. It includes a form for entering a username and password, and upon submission, it checks the credentials. If the credentials match predefined values, it stores a login state in local storage and navigates to the admin dashboard. The page features a gradient background, a logo, and responsive design elements.
