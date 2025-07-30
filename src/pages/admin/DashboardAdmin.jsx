@@ -28,13 +28,18 @@ import CrudSKKKNTematik from "./CrudSKKKNTematik";
 // Struktur menuList yang benar
 const menuList = [
   {
-    key: "pimpinanLembaga",
-    label: "Profil Pimpinan",
+    key: "profil",
+    label: "Profil",
     submenus: [
       {
         key: "pimpinanLembaga",
-        label: "Upload Foto Pimpinan",
+        label: "Profil Pimpinan",
         component: <CrudPimpinanLembaga />,
+      },
+      {
+        key: "strukturOrganisasi",
+        label: "Struktur Organisasi",
+        component: <CrudStrukturOrganisasi />,
       },
     ],
   },
@@ -109,17 +114,6 @@ const menuList = [
         key: "kuisionerKKN",
         label: "KKN",
         component: <CrudKuisioner kategori="kkn" />,
-      },
-    ],
-  },
-  {
-    key: "strukturOrganisasi",
-    label: "Struktur Organisasi",
-    submenus: [
-      {
-        key: "strukturOrganisasi",
-        label: "Upload Struktur Organisasi",
-        component: <CrudStrukturOrganisasi />,
       },
     ],
   },
@@ -294,6 +288,7 @@ const DashboardAdmin = () => {
             {menuList.map((menu) => {
               // Tambahkan 'kuisioner' sebagai dropdown
               const isDropdown =
+                menu.key === "profil" ||
                 menu.key === "panduan" ||
                 menu.key === "program" ||
                 menu.key === "kkn" ||
