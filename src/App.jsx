@@ -53,7 +53,6 @@ const PublicLayout = () => {
 function App() {
   return (
     <Routes>
-      {/* Rute Admin (tanpa Navbar/Footer publik) */}
       <Route path="/admin/login" element={<Login />} />
       <Route
         path="/admin"

@@ -23,7 +23,6 @@ const Homepage = () => {
       <HomeCard title="Informasi Penelitian" />
       <HomeCard title="Informasi Pengabdian Pada Masyarakat" />
       <HomeCard title="Informasi Penelitian" />
-      <HomeCard title="Informasi Pengabdian Pada Masyarakat Mandiri" />
 
       <Faqcomp />
     </div>

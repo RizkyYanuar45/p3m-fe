@@ -2,90 +2,167 @@ import { useState, useEffect, useRef } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
-const initialForm = {
-  judul: "",
-  deskripsi: "",
-  tanggal: "",
-  link: "",
-  namaDosen: "",
-};
-
+const api = import.meta.env.VITE_API_URL;
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 const CrudInformasiKKN = () => {
   const [data, setData] = useState([]);
-  const [form, setForm] = useState(initialForm);
-  const [editIndex, setEditIndex] = useState(null);
+  const [form, setForm] = useState({ title: "", author: "" });
+  const [thumbnail, setThumbnail] = useState(null);
+  const [editId, setEditId] = useState(null);
 
-  // Ref untuk DOM element dan instance Quill
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const quillEditorRef = useRef(null);
   const quillInstanceRef = useRef(null);
 
-  // Inisialisasi Quill hanya sekali saat komponen dimuat
   useEffect(() => {
     if (quillEditorRef.current && !quillInstanceRef.current) {
       const quill = new Quill(quillEditorRef.current, {
         theme: "snow",
+        placeholder: "Tulis konten artikel di sini...",
         modules: {
-          toolbar: [["bold", "italic", "underline"], ["link"]],
+          toolbar: [
+            ["bold", "italic", "underline"],
+            ["link", "image"],
+          ],
         },
-        placeholder: "Tulis deskripsi KKN di sini...",
       });
       quillInstanceRef.current = quill;
     }
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const response = await fetch(`${api}/article/type/informasi_kkn`);
+        if (!response.ok) throw new Error("Gagal mengambil data artikel.");
+        const result = await response.json();
+        setData(result);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [api]);
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Ambil konten deskripsi langsung dari instance Quill
-    const deskripsi = quillInstanceRef.current.root.innerHTML;
-    const finalForm = { ...form, deskripsi };
+  const handleFileChange = (e) => {
+    setThumbnail(e.target.files[0]);
+  };
 
-    if (editIndex !== null) {
-      setData((prev) =>
-        prev.map((item, idx) => (idx === editIndex ? finalForm : item))
-      );
-      setEditIndex(null);
-    } else {
-      setData((prev) => [...prev, { ...finalForm, id: Date.now() }]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    const content = quillInstanceRef.current.root.innerHTML;
+    if (content === "<p><br></p>") {
+      setError("Konten tidak boleh kosong.");
+      return;
     }
 
-    // Reset form dan editor Quill
-    setForm(initialForm);
-    quillInstanceRef.current.setText("");
+    const formData = new FormData();
+    formData.append("title", form.title);
+    formData.append("content", content);
+    formData.append("author", form.author);
+
+    // Hanya kirim thumbnail jika ada file baru yang dipilih
+    if (thumbnail) {
+      formData.append("thumbnail", thumbnail);
+    }
+
+    // Kategori tetap ditambahkan saat 'add', tapi tidak perlu saat 'update'
+    if (!editId) {
+      formData.append("category", "informasi_kkn");
+    }
+
+    try {
+      let response;
+      if (editId) {
+        // --- LOGIKA UPDATE (PATCH) ---
+        response = await fetch(`${api}/article/update/${editId}`, {
+          method: "PATCH",
+          body: formData,
+          credentials: "include",
+        });
+        const updatedData = await response.json();
+        if (!response.ok) {
+          throw new Error(updatedData.message || "Gagal memperbarui artikel.");
+        }
+        setData((prev) =>
+          prev.map((item) => (item.id === editId ? updatedData : item))
+        );
+        setEditId(null);
+      } else {
+        // --- LOGIKA TAMBAH (POST) ---
+        response = await fetch(`${api}/article/add`, {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        });
+        const newData = await response.json();
+        if (!response.ok) {
+          throw new Error(newData.message || "Gagal menambahkan artikel.");
+        }
+        setData((prev) => [...prev, newData]);
+      }
+
+      // Reset form
+      setForm({ title: "", author: "" });
+      setThumbnail(null);
+      quillInstanceRef.current.setText("");
+      if (e.target.thumbnail) e.target.thumbnail.value = null;
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
-  const handleEdit = (idx) => {
-    const itemToEdit = data[idx];
-    setForm(itemToEdit);
-    setEditIndex(idx);
-    // Masukkan konten deskripsi ke dalam editor Quill
-    quillInstanceRef.current.root.innerHTML = itemToEdit.deskripsi;
+  const handleEdit = (item) => {
+    setEditId(item.id);
+    setForm({ title: item.title, author: item.author });
+    quillInstanceRef.current.root.innerHTML = item.content;
+    setThumbnail(null); // Kosongkan state file
+    document.querySelector('input[type="file"]').value = ""; // Reset input file di DOM
   };
 
-  const handleDelete = (idx) => {
-    if (window.confirm("Hapus data ini?")) {
-      setData((prev) => prev.filter((_, i) => i !== idx));
-      if (editIndex === idx) {
-        setForm(initialForm);
-        setEditIndex(null);
-        quillInstanceRef.current.setText("");
+  const handleDelete = async (id) => {
+    if (window.confirm("Yakin ingin menghapus artikel ini?")) {
+      setError("");
+      try {
+        const response = await fetch(`${api}/article/delete/${id}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Gagal menghapus artikel.");
+        }
+        setData(data.filter((item) => item.id !== id));
+      } catch (err) {
+        setError(err.message);
       }
     }
   };
 
-  const handleCancel = () => {
-    setForm(initialForm);
-    setEditIndex(null);
+  const handleCancelEdit = () => {
+    setEditId(null);
+    setForm({ title: "", author: "" });
+    setThumbnail(null);
     quillInstanceRef.current.setText("");
+    document.querySelector('input[type="file"]').value = "";
   };
 
   return (
     <div>
-      <h2>Kelola Informasi KKN UNIM</h2>
+      <h2>Informasi Penelitian</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -96,218 +173,96 @@ const CrudInformasiKKN = () => {
         }}
       >
         <div style={{ marginBottom: 12 }}>
-          <label>
-            Judul:
-            <br />
-            <input
-              type="text"
-              name="judul"
-              value={form.judul}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: 8,
-                borderRadius: 4,
-                border: "1px solid #ccc",
-              }}
-              required
-            />
-          </label>
+          <label>Judul:</label>
+          <br />
+          <input
+            type="text"
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            required
+            style={{ width: "100%" }}
+          />
         </div>
         <div style={{ marginBottom: 12 }}>
-          <label>
-            Nama Dosen:
-            <br />
-            <input
-              type="text"
-              name="namaDosen"
-              value={form.namaDosen}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: 8,
-                borderRadius: 4,
-                border: "1px solid #ccc",
-              }}
-              required
-            />
-          </label>
+          <label>Author:</label>
+          <br />
+          <input
+            type="text"
+            name="author"
+            value={form.author}
+            onChange={handleChange}
+            required
+            style={{ width: "100%" }}
+          />
         </div>
-
-        {/* Editor Quill untuk Deskripsi */}
         <div style={{ marginBottom: 12 }}>
-          <label>
-            Deskripsi:
-            <br />
-          </label>
+          <label>Thumbnail (Gambar):</label>
+          <br />
+          <small>
+            {editId ? "Pilih file baru untuk mengganti thumbnail." : ""}
+          </small>
+          <br />
+          <input
+            type="file"
+            name="thumbnail"
+            onChange={handleFileChange}
+            accept="image/*"
+          />
+        </div>
+        <div style={{ marginBottom: 12 }}>
+          <label>Konten:</label>
           <div
             ref={quillEditorRef}
-            style={{ background: "#fff", minHeight: "150px" }}
+            style={{ background: "#fff", minHeight: "200px" }}
           ></div>
         </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label>
-            Tanggal:
-            <br />
-            <input
-              type="date"
-              name="tanggal"
-              value={form.tanggal}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: 8,
-                borderRadius: 4,
-                border: "1px solid #ccc",
-              }}
-              required
-            />
-          </label>
-        </div>
-        <div style={{ marginBottom: 12 }}>
-          <label>
-            Link (URL):
-            <br />
-            <input
-              type="url"
-              name="link"
-              value={form.link}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: 8,
-                borderRadius: 4,
-                border: "1px solid #ccc",
-              }}
-              placeholder="https://contoh-link.com"
-              required
-            />
-          </label>
-        </div>
-        <button
-          type="submit"
-          style={{
-            background: "#1976d2",
-            color: "#fff",
-            border: "none",
-            borderRadius: 4,
-            padding: "8px 20px",
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-        >
-          {editIndex !== null ? "Simpan Perubahan" : "Tambah Informasi"}
+        <button type="submit">
+          {editId ? "Update Artikel" : "Tambah Artikel"}
         </button>
-        {editIndex !== null && (
-          <button
-            type="button"
-            onClick={handleCancel}
-            style={{
-              marginLeft: 12,
-              background: "#e53935",
-              color: "#fff",
-              border: "none",
-              borderRadius: 4,
-              padding: "8px 20px",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
+        {editId && (
+          <button type="button" onClick={handleCancelEdit}>
             Batal
           </button>
         )}
       </form>
-      <div>
-        <h3>Daftar Informasi KKN UNIM</h3>
-        {data.length === 0 ? (
-          <div style={{ color: "#888" }}>Belum ada data.</div>
-        ) : (
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              background: "#fff",
-            }}
-          >
-            <thead>
-              <tr style={{ background: "#f0f0f0" }}>
-                <th style={{ border: "1px solid #ddd", padding: 8 }}>Judul</th>
-                <th style={{ border: "1px solid #ddd", padding: 8 }}>
-                  Nama Dosen
-                </th>
-                <th style={{ border: "1px solid #ddd", padding: 8 }}>
-                  Deskripsi
-                </th>
-                <th style={{ border: "1px solid #ddd", padding: 8 }}>
-                  Tanggal
-                </th>
-                <th style={{ border: "1px solid #ddd", padding: 8 }}>Link</th>
-                <th style={{ border: "1px solid #ddd", padding: 8 }}>Aksi</th>
+
+      <h3>Daftar Artikel Penelitian</h3>
+      {loading ? (
+        <p>Memuat data...</p>
+      ) : (
+        <table border="1" cellPadding="8" style={{ width: "100%" }}>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Thumbnail</th>
+              <th>Judul</th>
+              <th>Author</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item, idx) => (
+              <tr key={item.id}>
+                <td>{idx + 1}</td>
+                <td>
+                  <img
+                    src={`${backendUrl}/${item.thumbnail}`}
+                    alt={item.title}
+                    width="100"
+                  />
+                </td>
+                <td>{item.title}</td>
+                <td>{item.author}</td>
+                <td>
+                  <button onClick={() => handleEdit(item)}>Edit</button>
+                  <button onClick={() => handleDelete(item.id)}>Hapus</button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {data.map((item, idx) => (
-                <tr key={item.id || idx}>
-                  <td style={{ border: "1px solid #ddd", padding: 8 }}>
-                    {item.judul}
-                  </td>
-                  <td style={{ border: "1px solid #ddd", padding: 8 }}>
-                    {item.namaDosen}
-                  </td>
-                  <td style={{ border: "1px solid #ddd", padding: 8 }}>
-                    {/* Tampilkan deskripsi sebagai HTML */}
-                    <div dangerouslySetInnerHTML={{ __html: item.deskripsi }} />
-                  </td>
-                  <td style={{ border: "1px solid #ddd", padding: 8 }}>
-                    {item.tanggal}
-                  </td>
-                  <td style={{ border: "1px solid #ddd", padding: 8 }}>
-                    <a
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Lihat
-                    </a>
-                  </td>
-                  <td style={{ border: "1px solid #ddd", padding: 8 }}>
-                    <button
-                      onClick={() => handleEdit(idx)}
-                      style={{
-                        marginRight: 8,
-                        background: "#ffb300",
-                        color: "#222d32",
-                        border: "none",
-                        borderRadius: 4,
-                        padding: "4px 12px",
-                        fontWeight: 600,
-                        cursor: "pointer",
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(idx)}
-                      style={{
-                        background: "#e53935",
-                        color: "#fff",
-                        border: "none",
-                        borderRadius: 4,
-                        padding: "4px 12px",
-                        fontWeight: 600,
-                        cursor: "pointer",
-                      }}
-                    >
-                      Hapus
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

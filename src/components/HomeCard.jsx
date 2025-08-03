@@ -106,7 +106,7 @@ const HomeCard = ({ newsItems, showViewAllButton = true, title = "null" }) => {
       {/* Custom CSS Styles */}
       <style jsx>{`
         .berita-title {
-          color: #e85a0e;
+          color: #231942;
           font-size: 3rem;
           font-family: "Poppins", serif;
         }

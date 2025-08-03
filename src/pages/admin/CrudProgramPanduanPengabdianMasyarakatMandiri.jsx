@@ -1,69 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
-import { panduanPengabdianKepadaMasyarakat as initialData } from "../../data/panduanPengabdianKepadaMasyarakat";
+
+const initialForm = { file_name: "", file_description: "", file_url: "" };
+const api = import.meta.env.VITE_API_URL;
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const CrudProgramPanduan = () => {
-  // --- STATE DAN LOGIKA UNTUK PANDUAN PENGABDIAN MASYARAKAT ---
-  const [panduanData, setPanduanData] = useState(initialData || []);
-  const [panduanForm, setPanduanForm] = useState({
-    title: "",
-    description: "",
-    date: "",
-    urlDrive: "",
-  });
-  const [panduanEditIndex, setPanduanEditIndex] = useState(null);
+  const [panduanPenelitian, setPanduanPenelitian] = useState([]);
+  const [form, setForm] = useState(initialForm);
+  const [editId, setEditId] = useState(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [dataArtikel, setDataArtikel] = useState([]);
+  const [formArtikel, setFormArtikel] = useState({ title: "", author: "" });
+  const [thumbnailArtikel, setThumbnailArtikel] = useState(null);
+  const [editIdArtikel, setEditIdArtikel] = useState(null);
 
-  const handlePanduanChange = (e) => {
-    setPanduanForm({ ...panduanForm, [e.target.name]: e.target.value });
-  };
-
-  const handlePanduanSubmit = (e) => {
-    e.preventDefault();
-    if (panduanEditIndex !== null) {
-      const updated = [...panduanData];
-      updated[panduanEditIndex] = {
-        ...panduanForm,
-        id: updated[panduanEditIndex].id,
-      };
-      setPanduanData(updated);
-      setPanduanEditIndex(null);
-    } else {
-      setPanduanData([...panduanData, { ...panduanForm, id: Date.now() }]);
-    }
-    setPanduanForm({ title: "", description: "", date: "", urlDrive: "" });
-  };
-
-  const handlePanduanEdit = (item, index) => {
-    setPanduanForm(item);
-    setPanduanEditIndex(index);
-  };
-
-  const handlePanduanDelete = (index) => {
-    if (window.confirm("Yakin ingin menghapus data ini?")) {
-      setPanduanData(panduanData.filter((_, i) => i !== index));
-      if (panduanEditIndex === index) {
-        setPanduanEditIndex(null);
-        setPanduanForm({ title: "", description: "", date: "", urlDrive: "" });
-      }
-    }
-  };
-
-  // --- STATE DAN LOGIKA UNTUK INFORMASI PENELITIAN (DENGAN QUILL) ---
-  const [penelitianData, setPenelitianData] = useState([
-    {
-      id: 1,
-      judul: "Penelitian A",
-      deskripsi: "<p>Deskripsi <strong>Penelitian A</strong></p>",
-    },
-    {
-      id: 2,
-      judul: "Penelitian B",
-      deskripsi: "<p>Deskripsi <em>Penelitian B</em></p>",
-    },
-  ]);
-  const [penelitianForm, setPenelitianForm] = useState({ judul: "" });
-  const [penelitianEditId, setPenelitianEditId] = useState(null);
+  const [loadingArtikel, setLoadingArtikel] = useState(true);
+  const [errorArtikel, setErrorArtikel] = useState("");
 
   const quillEditorRef = useRef(null);
   const quillInstanceRef = useRef(null);
@@ -72,138 +27,332 @@ const CrudProgramPanduan = () => {
     if (quillEditorRef.current && !quillInstanceRef.current) {
       const quill = new Quill(quillEditorRef.current, {
         theme: "snow",
-        modules: { toolbar: [["bold", "italic", "underline"], ["link"]] },
-        placeholder: "Tulis deskripsi penelitian di sini...",
+        placeholder: "Tulis konten artikel di sini...",
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline"],
+            ["link", "image"],
+          ],
+        },
       });
       quillInstanceRef.current = quill;
     }
   }, []);
 
-  const handlePenelitianChange = (e) => {
-    setPenelitianForm({ ...penelitianForm, [e.target.name]: e.target.value });
+  useEffect(() => {
+    const fetchDataArtikel = async () => {
+      setLoadingArtikel(true);
+      setErrorArtikel("");
+      try {
+        const response = await fetch(
+          `${api}/article/type/informasi_pengabdian_masyarakat_mandiri`
+        );
+        if (!response.ok)
+          throw new Error("Gagal mengambil dataArtikel artikel.");
+        const result = await response.json();
+        setDataArtikel(result);
+      } catch (err) {
+        setErrorArtikel(err.message);
+      } finally {
+        setLoadingArtikel(false);
+      }
+    };
+    fetchDataArtikel();
+  }, [api]);
+
+  const handleChangeArticle = (e) => {
+    setFormArtikel({ ...formArtikel, [e.target.name]: e.target.value });
   };
 
-  const handlePenelitianSubmit = (e) => {
-    e.preventDefault();
-    const deskripsi = quillInstanceRef.current.root.innerHTML;
-    const finalForm = { ...penelitianForm, deskripsi };
+  const handleFileChangeArticle = (e) => {
+    setThumbnailArtikel(e.target.files[0]);
+  };
 
-    if (penelitianEditId) {
-      setPenelitianData(
-        penelitianData.map((item) =>
-          item.id === penelitianEditId ? { ...item, ...finalForm } : item
-        )
-      );
-      setPenelitianEditId(null);
-    } else {
-      setPenelitianData([...penelitianData, { id: Date.now(), ...finalForm }]);
+  const handleSubmitArticle = async (e) => {
+    e.preventDefault();
+    setErrorArtikel("");
+
+    const content = quillInstanceRef.current.root.innerHTML;
+    if (content === "<p><br></p>") {
+      setErrorArtikel("Konten tidak boleh kosong.");
+      return;
     }
 
-    setPenelitianForm({ judul: "" });
-    quillInstanceRef.current.setText("");
+    const formData = new FormData();
+    formData.append("title", formArtikel.title);
+    formData.append("content", content);
+    formData.append("author", formArtikel.author);
+
+    // Hanya kirim thumbnail jika ada file baru yang dipilih
+    if (thumbnailArtikel) {
+      formData.append("thumbnail", thumbnailArtikel);
+    }
+
+    // Kategori tetap ditambahkan saat 'add', tapi tidak perlu saat 'update'
+    if (!editIdArtikel) {
+      formData.append("category", "informasi_pengabdian_masyarakat_mandiri");
+    }
+
+    try {
+      let response;
+      if (editIdArtikel) {
+        // --- LOGIKA UPDATE (PATCH) ---
+        response = await fetch(`${api}/article/update/${editIdArtikel}`, {
+          method: "PATCH",
+          body: formData,
+          credentials: "include",
+        });
+        const updatedData = await response.json();
+        if (!response.ok) {
+          throw new Error(updatedData.message || "Gagal memperbarui artikel.");
+        }
+        setDataArtikel((prev) =>
+          prev.map((item) => (item.id === editIdArtikel ? updatedData : item))
+        );
+        setEditIdArtikel(null);
+      } else {
+        // --- LOGIKA TAMBAH (POST) ---
+        response = await fetch(`${api}/article/add`, {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        });
+        const newData = await response.json();
+        if (!response.ok) {
+          throw new Error(newData.message || "Gagal menambahkan artikel.");
+        }
+        setDataArtikel((prev) => [...prev, newData]);
+      }
+
+      // Reset formArtikel
+      setFormArtikel({ title: "", author: "" });
+      setThumbnailArtikel(null);
+      quillInstanceRef.current.setText("");
+      if (e.target.thumbnailArtikel) e.target.thumbnailArtikel.value = null;
+    } catch (err) {
+      setErrorArtikel(err.message);
+    }
   };
 
-  const handlePenelitianEdit = (item) => {
-    setPenelitianForm({ judul: item.judul });
-    quillInstanceRef.current.root.innerHTML = item.deskripsi;
-    setPenelitianEditId(item.id);
+  const handleEditArticle = (item) => {
+    setEditIdArtikel(item.id);
+    setFormArtikel({ title: item.title, author: item.author });
+    quillInstanceRef.current.root.innerHTML = item.content;
+    setThumbnailArtikel(null); // Kosongkan state file
+    document.querySelector('input[type="file"]').value = ""; // Reset input file di DOM
   };
 
-  const handlePenelitianDelete = (id) => {
-    if (window.confirm("Yakin ingin menghapus data ini?")) {
-      setPenelitianData(penelitianData.filter((item) => item.id !== id));
-      if (penelitianEditId === id) {
-        setPenelitianEditId(null);
-        setPenelitianForm({ judul: "" });
-        quillInstanceRef.current.setText("");
+  const handleDeleteArticle = async (id) => {
+    if (window.confirm("Yakin ingin menghapus artikel ini?")) {
+      setErrorArtikel("");
+      try {
+        const response = await fetch(`${api}/article/delete/${id}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Gagal menghapus artikel.");
+        }
+        setDataArtikel(dataArtikel.filter((item) => item.id !== id));
+      } catch (err) {
+        setErrorArtikel(err.message);
       }
     }
   };
 
+  const handleCancelEditArticle = () => {
+    setEditIdArtikel(null);
+    setFormArtikel({ title: "", author: "" });
+    setThumbnailArtikel(null);
+    quillInstanceRef.current.setText("");
+    document.querySelector('input[type="file"]').value = "";
+  };
+
+  // GET: Mengambil data dengan fetch
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `${api}/files/type?type=dokumen_pengabdian_masyarakat_mandiri`
+        );
+        if (!response.ok) {
+          throw new Error("Gagal mengambil data dari server.");
+        }
+        const data = await response.json();
+        setPanduanPenelitian(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [api]);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (editId) {
+      // Logika UPDATE (PATCH) dengan fetch
+      try {
+        const response = await fetch(`${api}/files/update/${editId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+          credentials: "include",
+        });
+        const updatedData = await response.json();
+        if (!response.ok) {
+          throw new Error(updatedData.message || "Gagal memperbarui data.");
+        }
+        setPanduanPenelitian((prev) =>
+          prev.map((item) => (item.id === editId ? updatedData : item))
+        );
+        setEditId(null);
+        setForm(initialForm);
+      } catch (err) {
+        setError(err.message);
+      }
+    } else {
+      // Logika TAMBAH (POST) dengan fetch
+      const dataToSend = {
+        ...form,
+        file_type: "dokumen_pengabdian_masyarakat_mandiri",
+      };
+      try {
+        const response = await fetch(`${api}/files/add`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSend),
+          credentials: "include",
+        });
+        const newData = await response.json();
+        if (!response.ok) {
+          throw new Error(newData.message || "Gagal menambahkan data.");
+        }
+        setPanduanPenelitian((prev) => [...prev, newData]);
+        setForm(initialForm);
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  };
+
+  const handleEdit = (item) => {
+    setEditId(item.id);
+    setForm({
+      file_name: item.file_name,
+      file_description: item.file_description,
+      file_url: item.file_url,
+    });
+  };
+
+  // --- FUNGSI DELETE YANG DIPERBARUI ---
+  const handleDelete = async (id) => {
+    if (window.confirm("Yakin ingin menghapus data ini?")) {
+      setError("");
+      try {
+        const response = await fetch(`${api}/files/delete/${id}`, {
+          method: "DELETE",
+          credentials: "include", // Kirim cookie untuk otentikasi
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Gagal menghapus data.");
+        }
+
+        // Jika berhasil, hapus data dari state lokal agar UI terupdate
+        setPanduanPenelitian((prev) => prev.filter((item) => item.id !== id));
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  };
+  // ------------------------------------
+
+  const handleCancel = () => {
+    setEditId(null);
+    setForm(initialForm);
+  };
+
   return (
-    <div style={{ padding: "20px" }}>
-      {/* --- BAGIAN CRUD PANDUAN --- */}
-      <div style={{ marginBottom: "40px" }}>
-        <h3>Program Pengabdian Kepada Masyarakat Mandiri</h3>
-        <form
-          onSubmit={handlePanduanSubmit}
-          style={{
-            marginBottom: 16,
-            background: "#f9f9f9",
-            padding: "10px",
-            borderRadius: "5px",
-          }}
-        >
-          <input
-            name="title"
-            placeholder="Judul"
-            value={panduanForm.title}
-            onChange={handlePanduanChange}
-            required
-          />
-          <input
-            name="description"
-            placeholder="Deskripsi"
-            value={panduanForm.description}
-            onChange={handlePanduanChange}
-            required
-          />
-          <input
-            name="date"
-            placeholder="Tanggal"
-            value={panduanForm.date}
-            onChange={handlePanduanChange}
-            required
-          />
-          <input
-            name="urlDrive"
-            placeholder="URL Drive"
-            value={panduanForm.urlDrive}
-            onChange={handlePanduanChange}
-            required
-          />
-          <button type="submit">
-            {panduanEditIndex !== null ? "Simpan" : "Tambah"}
+    <div>
+      <h3>Data Panduan Pengabdian Masyarakat</h3>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          marginBottom: 16,
+          background: "#f9f9f9",
+          padding: "10px",
+          borderRadius: "5px",
+        }}
+      >
+        <input
+          name="file_name"
+          placeholder="Judul"
+          value={form.file_name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="file_description"
+          placeholder="Deskripsi"
+          value={form.file_description}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="file_url"
+          type="url"
+          placeholder="URL File (Google Drive)"
+          value={form.file_url}
+          onChange={handleChange}
+          required
+        />
+
+        <button type="submit">{editId ? "Simpan Perubahan" : "Tambah"}</button>
+        {editId && (
+          <button type="button" onClick={handleCancel}>
+            Batal
           </button>
-          {panduanEditIndex !== null && (
-            <button
-              type="button"
-              onClick={() => {
-                setPanduanEditIndex(null);
-                setPanduanForm({
-                  title: "",
-                  description: "",
-                  date: "",
-                  urlDrive: "",
-                });
-              }}
-            >
-              Batal
-            </button>
-          )}
-        </form>
+        )}
+      </form>
+
+      {loading ? (
+        <p>Memuat data...</p>
+      ) : (
         <table border="1" cellPadding="8" style={{ width: "100%" }}>
-          {/* ... Tabel Panduan ... */}
           <thead>
             <tr>
               <th>No</th>
               <th>Judul</th>
               <th>Deskripsi</th>
-              <th>Tanggal</th>
               <th>URL</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {panduanData.map((item, idx) => (
+            {panduanPenelitian.map((item, idx) => (
               <tr key={item.id}>
                 <td>{idx + 1}</td>
-                <td>{item.title}</td>
-                <td>{item.description}</td>
-                <td>{item.date}</td>
+                <td>{item.file_name}</td>
+                <td>{item.file_description}</td>
                 <td>
                   <a
-                    href={item.urlDrive}
+                    href={item.file_url}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -211,95 +360,111 @@ const CrudProgramPanduan = () => {
                   </a>
                 </td>
                 <td>
-                  <button onClick={() => handlePanduanEdit(item, idx)}>
-                    Edit
-                  </button>
-                  <button onClick={() => handlePanduanDelete(idx)}>
-                    Hapus
-                  </button>
+                  <button onClick={() => handleEdit(item)}>Edit</button>
+                  <button onClick={() => handleDelete(item.id)}>Hapus</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
-
-      <hr />
-
-      {/* --- BAGIAN CRUD PENELITIAN DENGAN QUILL --- */}
-      <div style={{ marginTop: "40px" }}>
-        <h3>Informasi Penelitian</h3>
-        <form
-          onSubmit={handlePenelitianSubmit}
-          style={{
-            marginBottom: 24,
-            background: "#f5f5f5",
-            padding: 16,
-            borderRadius: 8,
-          }}
-        >
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ display: "block", marginBottom: 4 }}>Judul:</label>
-            <input
-              type="text"
-              name="judul"
-              value={penelitianForm.judul}
-              onChange={handlePenelitianChange}
-              required
-              style={{
-                width: "100%",
-                padding: 8,
-                borderRadius: 4,
-                border: "1px solid #ccc",
-              }}
-            />
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ display: "block", marginBottom: 4 }}>
-              Deskripsi:
-            </label>
-            <div
-              ref={quillEditorRef}
-              style={{ background: "#fff", minHeight: "150px" }}
-            ></div>
-          </div>
-          <button
-            type="submit"
-            style={{
-              background: "#1976d2",
-              color: "#fff",
-              border: "none",
-              borderRadius: 4,
-              padding: "8px 20px",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            {penelitianEditId ? "Update" : "Tambah"}
+      )}
+      <hr className=" mt-5" />
+      <h2 className=" mt-5">Informasi Penelitian</h2>
+      {errorArtikel && <p style={{ color: "red" }}>{errorArtikel}</p>}
+      <form
+        onSubmit={handleSubmitArticle}
+        style={{
+          background: "#f5f5f5",
+          padding: 16,
+          borderRadius: 8,
+          marginBottom: 24,
+        }}
+      >
+        <div style={{ marginBottom: 12 }}>
+          <label>Judul:</label>
+          <br />
+          <input
+            type="text"
+            name="title"
+            value={formArtikel.title}
+            onChange={handleChangeArticle}
+            required
+            style={{ width: "100%" }}
+          />
+        </div>
+        <div style={{ marginBottom: 12 }}>
+          <label>Author:</label>
+          <br />
+          <input
+            type="text"
+            name="author"
+            value={formArtikel.author}
+            onChange={handleChangeArticle}
+            required
+            style={{ width: "100%" }}
+          />
+        </div>
+        <div style={{ marginBottom: 12 }}>
+          <label>Thumbnail (Gambar):</label>
+          <br />
+          <small>
+            {editIdArtikel ? "Pilih file baru untuk mengganti thumbnail." : ""}
+          </small>
+          <br />
+          <input
+            type="file"
+            name="thumbnail"
+            onChange={handleFileChangeArticle}
+            accept="image/*"
+          />
+        </div>
+        <div style={{ marginBottom: 12 }}>
+          <label>Konten:</label>
+          <div
+            ref={quillEditorRef}
+            style={{ background: "#fff", minHeight: "200px" }}
+          ></div>
+        </div>
+        <button type="submit">
+          {editIdArtikel ? "Update Artikel" : "Tambah Artikel"}
+        </button>
+        {editIdArtikel && (
+          <button type="button" onClick={handleCancelEditArticle}>
+            Batal
           </button>
-          {/* ... Tombol Batal untuk Penelitian ... */}
-        </form>
+        )}
+      </form>
+
+      <h3>Daftar Artikel Penelitian</h3>
+      {loadingArtikel ? (
+        <p>Memuat dataArtikel...</p>
+      ) : (
         <table border="1" cellPadding="8" style={{ width: "100%" }}>
-          {/* ... Tabel Penelitian ... */}
           <thead>
             <tr>
+              <th>No</th>
+              <th>Thumbnail</th>
               <th>Judul</th>
-              <th>Deskripsi</th>
+              <th>Author</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {penelitianData.map((item) => (
+            {dataArtikel.map((item, idx) => (
               <tr key={item.id}>
-                <td>{item.judul}</td>
+                <td>{idx + 1}</td>
                 <td>
-                  <div dangerouslySetInnerHTML={{ __html: item.deskripsi }} />
+                  <img
+                    src={`${backendUrl}/${item.thumbnail}`}
+                    alt={item.title}
+                    width="100"
+                  />
                 </td>
+                <td>{item.title}</td>
+                <td>{item.author}</td>
                 <td>
-                  <button onClick={() => handlePenelitianEdit(item)}>
-                    Edit
-                  </button>
-                  <button onClick={() => handlePenelitianDelete(item.id)}>
+                  <button onClick={() => handleEditArticle(item)}>Edit</button>
+                  <button onClick={() => handleDeleteArticle(item.id)}>
                     Hapus
                   </button>
                 </td>
@@ -307,7 +472,7 @@ const CrudProgramPanduan = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      )}
     </div>
   );
 };

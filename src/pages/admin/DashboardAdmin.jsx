@@ -96,27 +96,7 @@ const menuList = [
       },
     ],
   },
-  {
-    key: "kuisioner",
-    label: "Kelola Kuisioner / Komplain",
-    submenus: [
-      {
-        key: "kuisionerPenelitian",
-        label: "Penelitian",
-        component: <CrudKuisioner kategori="penelitian" />,
-      },
-      {
-        key: "kuisionerPengabdian",
-        label: "Pengabdian Kepada Masyarakat",
-        component: <CrudKuisioner kategori="pengabdian" />,
-      },
-      {
-        key: "kuisionerKKN",
-        label: "KKN",
-        component: <CrudKuisioner kategori="kkn" />,
-      },
-    ],
-  },
+
   {
     key: "kkn",
     label: "Kelola Kuliah Kerja Nyata",
