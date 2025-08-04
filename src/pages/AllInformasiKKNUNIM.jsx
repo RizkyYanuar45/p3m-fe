@@ -6,7 +6,7 @@ import ArticleCard from "../components/ArticleCard";
 const api = import.meta.env.VITE_API_URL;
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-const SearchPage = () => {
+const AllInformasiKKNUNIM = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ const SearchPage = () => {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(`${api}/article`); // Mengambil semua artikel
+        const response = await fetch(`${api}/article/type/informasi_kkn`); // Mengambil semua artikel
         if (!response.ok) throw new Error("Gagal memuat artikel dari server.");
         const data = await response.json();
         setAllArticles(data);
@@ -113,7 +113,7 @@ const SearchPage = () => {
       <h2 className="mb-4">
         {queryFromUrl
           ? `Hasil Pencarian untuk "${queryFromUrl}"`
-          : "Semua Artikel"}
+          : "Semua Artikel Informasi KKN UNIM"}
       </h2>
       <Form onSubmit={handleSearch} className="d-flex mb-4">
         <Form.Control
@@ -210,4 +210,4 @@ const SearchPage = () => {
   );
 };
 
-export default SearchPage;
+export default AllInformasiKKNUNIM;

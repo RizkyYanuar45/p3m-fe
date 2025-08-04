@@ -100,8 +100,8 @@ export const navLinks = [
   },
   {
     id: 6,
-    path: "https://ejurnal.unim.ac.id/index.php/abdimasnusantara",
-    text: "Jurnal",
+    path: "https://ejurnal.unim.ac.id/index.php",
+    text: "E-Jurnal",
   },
   {
     id: 7,

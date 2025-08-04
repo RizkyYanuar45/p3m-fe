@@ -1,55 +1,98 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Image } from "react-bootstrap";
+import { useParams } from "react-router-dom"; // 1. Impor useParams
 
-// Anda bisa mengganti data ini dengan data dari API atau props
-const articleData = {
-  title: "Menguasai React Bootstrap dalam Satu Jam",
-  author: "Budi Sanjaya",
-  publishedDate: "24 Juli 2025",
-  thumbnailUrl: "https://picsum.photos/seed/picsum/1200/600", // URL gambar placeholder
-  content: `
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et dapibus leo, et varius sem. 
-      Phasellus vitae consequat nisi. Proin ut lorem nunc. Curabitur maximus, turpis quis vehicula 
-      fringilla, velit justo blandit purus, ac suscipit odio elit vitae sapien. Duis non massa et 
-      nibh commodo maximus.
-    </p>
-    <p>
-      Nullam ac urna et felis ultricies fermentum. Sed nec enim non odio faucibus tristique. 
-      Vivamus ut justo id elit feugiat consequat. Integer eget elit in elit scelerisque tincidunt 
-      vel eu sem. Cras egestas, dolor eu viverra vehicula, felis magna faucibus mi, et mattis 
-      massa erat a est.
-    </p>
-    <p>
-      Donec facilisis, risus et sollicitudin egestas, magna magna sollicitudin arcu, at vehicula 
-      nisl sem eu orci. In hac habitasse platea dictumst. Curabitur ac tincidunt velit, vel 
-      elementum arcu. Pellentesque habitant morbi tristique senectus et netus et malesuada 
-      fames ac turpis egestas.
-    </p>
-  `,
-};
+const api = import.meta.env.VITE_API_URL;
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const ArticlePage = () => {
+  // 2. Ambil parameter 'slug' dari URL
+  const { slug } = useParams();
+
+  // 3. State untuk menyimpan data artikel, status loading, dan error
+  const [article, setArticle] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // 4. useEffect untuk mengambil data berdasarkan slug
+  useEffect(() => {
+    if (!slug) return; // Jangan lakukan apa-apa jika tidak ada slug
+
+    const fetchData = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const response = await fetch(`${api}/article/slug/${slug}`);
+        if (!response.ok) {
+          throw new Error(
+            "Artikel tidak ditemukan atau terjadi kesalahan server."
+          );
+        }
+        const data = await response.json();
+        setArticle(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [slug]); // Efek ini akan berjalan lagi jika slug berubah
+
+  // 5. Tampilan kondisional berdasarkan state
+  if (loading) {
+    return (
+      <Container className="my-5 text-center">
+        <p>Memuat artikel...</p>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container className="my-5 text-center">
+        <p className="text-danger">{error}</p>
+      </Container>
+    );
+  }
+
+  if (!article) {
+    return (
+      <Container className="my-5 text-center">
+        <p>Artikel tidak ditemukan.</p>
+      </Container>
+    );
+  }
+
+  // 6. Tampilan utama jika data berhasil dimuat
   return (
     <Container className="my-5">
       <Row className="justify-content-center">
         <Col md={8}>
           {/* Judul Artikel */}
-          <h1 className="text-center mb-3 fw-bold">{articleData.title}</h1>
+          <h1 className="text-center mb-3 fw-bold">{article.title}</h1>
 
           {/* Meta Info: Penulis dan Tanggal Terbit */}
           <div className="text-center text-muted mb-4">
             <span>
-              Oleh: <strong>{articleData.author}</strong>
+              Oleh: <strong>{article.author}</strong>
             </span>
             <span className="mx-2">|</span>
-            <span>Diterbitkan pada: {articleData.publishedDate}</span>
+            <span>
+              Diterbitkan pada:{" "}
+              {new Date(article.published_date).toLocaleDateString("id-ID", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
           </div>
 
           {/* Thumbnail Artikel */}
           <Image
-            src={articleData.thumbnailUrl}
-            alt="Article Thumbnail"
+            src={`${backendUrl}/${article.thumbnail.replace(/\\/g, "/")}`}
+            alt={article.title}
             fluid
             rounded
             className="mb-4 shadow-sm"
@@ -58,7 +101,7 @@ const ArticlePage = () => {
           {/* Konten Artikel */}
           <div
             className="article-content"
-            dangerouslySetInnerHTML={{ __html: articleData.content }}
+            dangerouslySetInnerHTML={{ __html: article.content }}
           />
         </Col>
       </Row>

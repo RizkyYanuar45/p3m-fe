@@ -1,4 +1,6 @@
-const ArticleCard = ({ image, title, author, date, excerpt, delay }) => {
+import { NavLink } from "react-router-dom";
+
+const ArticleCard = ({ image, title, author, date, excerpt, delay, slug }) => {
   return (
     <div
       className="shadow-sm rounded-3 p-3 d-flex flex-column"
@@ -20,7 +22,9 @@ const ArticleCard = ({ image, title, author, date, excerpt, delay }) => {
       <p>{excerpt}</p>
 
       <div className="d-grid mt-auto">
-        <button className="btn btn-primary rounded-1">Baca Selengkapnya</button>
+        <NavLink to={`/article/${slug}`} className="btn btn-primary rounded-1">
+          Baca Selengkapnya
+        </NavLink>
       </div>
     </div>
   );

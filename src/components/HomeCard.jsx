@@ -1,40 +1,105 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const HomeCard = ({ newsItems, showViewAllButton = true, title = "null" }) => {
-  // Data default jika tidak ada props newsItems
-  const defaultNews = [
-    {
-      id: 1,
-      date: "28",
-      month: "Jul",
-      title: "UNAIR Bersama Empat PTN-BH Lakukan Penanaman Pohon",
-      image:
-        "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=400&h=250&fit=crop&auto=format",
-      category: "Lingkungan",
-    },
-    {
-      id: 2,
-      date: "02",
-      month: "Jul",
-      title: "Penandatanganan Kontrak Penelitian JATIMPRO dan UNAIR",
-      image:
-        "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=400&h=250&fit=crop&auto=format",
-      category: "Kerjasama",
-    },
-    {
-      id: 3,
-      date: "22",
-      month: "Jul",
-      title: "LPPM UNAIR Gelar HITEX 2025 Showcase Inovasi Terdepan",
-      image:
-        "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=250&fit=crop&auto=format",
-      category: "Inovasi",
-    },
-  ];
+const HomeCard = ({ showViewAllButton = true, title = "null" }) => {
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const api = import.meta.env.VITE_API_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  const news = newsItems || defaultNews;
+  useEffect(() => {
+    // Tentukan tipe artikel berdasarkan judul (title)
+    let articleType = "informasi_pengabdian_masyarakat"; // Default
+    if (title === "Informasi Penelitian") {
+      articleType = "informasi_penelitian";
+    } else if (title === "Informasi KKN") {
+      articleType = "informasi_kkn";
+    }
+
+    const fetchData = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const response = await fetch(`${api}/article/type/${articleType}`);
+        if (!response.ok) {
+          throw new Error("Gagal mengambil data artikel.");
+        }
+        const data = await response.json();
+        // Ambil 3 artikel terbaru
+        setNews(data.slice(0, 3));
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [title]); // Jalankan ulang efek jika title berubah
+
+  // Fungsi untuk menangani klik tombol Lihat Semua
+  const handleViewAllClick = () => {
+    let path = "/all-informasi-pengabdian-kepada-masyarakat"; // Path default
+    if (title === "Informasi Penelitian") {
+      path = "/all-informasi-penelitian";
+    } else if (title === "Informasi KKN") {
+      path = "/all-informasi-kkn-unim";
+    }
+    navigate(path);
+  };
+
+  const renderContent = () => {
+    if (loading) return <p className="text-center">Memuat berita...</p>;
+    if (error) return <p className="text-center text-danger">{error}</p>;
+    if (news.length === 0)
+      return <p className="text-center">Tidak ada berita ditemukan.</p>;
+
+    return news.map((item) => {
+      const publishedDate = new Date(item.published_date);
+      const day = publishedDate.getDate();
+      const month = publishedDate.toLocaleString("id-ID", { month: "short" });
+
+      return (
+        <Col key={item.id} xl={4} lg={4} md={6} sm={10} xs={12}>
+          <Card
+            className="h-100 news-card border-0 shadow-sm mx-auto"
+            onClick={() => navigate(`/article/${item.slug}`)}
+            style={{ cursor: "pointer" }}
+          >
+            <div className="position-relative news-image-container">
+              <Card.Img
+                variant="top"
+                src={`${backendUrl}/${item.thumbnail.replace(/\\/g, "/")}`}
+                alt={item.title}
+                className="news-image"
+              />
+              <div className="news-overlay"></div>
+              <div className="date-badge position-absolute z-0 top-0 start-0 m-3">
+                <div className="date-number fw-bold">{day}</div>
+                <div className="date-month fw-semibold">{month}</div>
+              </div>
+            </div>
+            <Card.Body className="d-flex flex-column news-card-body">
+              <Card.Title className="mb-3 flex-grow-1 news-title">
+                {item.title}
+              </Card.Title>
+              <Button
+                variant="warning"
+                size="sm"
+                className="align-self-start fw-semibold selengkapnya-btn"
+              >
+                Selengkapnya
+              </Button>
+            </Card.Body>
+          </Card>
+        </Col>
+      );
+    });
+  };
 
   return (
     <>
@@ -43,58 +108,19 @@ const HomeCard = ({ newsItems, showViewAllButton = true, title = "null" }) => {
         style={{ backgroundColor: "#f8f9fa" }}
       >
         <Container>
-          {/* Header */}
           <div className="text-center mb-5">
             <h2 className="fw-bold mb-4 berita-title">{title}</h2>
           </div>
-
-          {/* News Cards */}
           <Row className="g-4 mb-4 justify-content-center">
-            {news.slice(0, 3).map((item) => (
-              <Col key={item.id} xl={4} lg={4} md={6} sm={10} xs={12}>
-                <Card className="h-100 news-card border-0 shadow-sm mx-auto">
-                  <div className="position-relative news-image-container">
-                    <Card.Img
-                      variant="top"
-                      src={item.image}
-                      alt={item.title}
-                      className="news-image"
-                    />
-                    {/* Overlay biru */}
-                    <div className="news-overlay"></div>
-
-                    {/* Date Badge */}
-                    <div className="date-badge position-absolute z-0 top-0 start-0 m-3">
-                      <div className="date-number fw-bold">{item.date}</div>
-                      <div className="date-month fw-semibold">{item.month}</div>
-                    </div>
-                  </div>
-
-                  <Card.Body className="d-flex flex-column news-card-body">
-                    <Card.Title className="mb-3 flex-grow-1 news-title">
-                      {item.title}
-                    </Card.Title>
-
-                    <Button
-                      variant="warning"
-                      size="sm"
-                      className="align-self-start fw-semibold selengkapnya-btn"
-                    >
-                      Selengkapnya
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
+            {renderContent()}
           </Row>
-
-          {/* View All Button */}
           {showViewAllButton && (
             <div className="text-center">
               <Button
                 variant="warning"
                 size="lg"
                 className="fw-semibold lihat-semua-btn"
+                onClick={handleViewAllClick}
               >
                 Lihat Semua
               </Button>

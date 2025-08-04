@@ -480,6 +480,11 @@ header .container {
   text-decoration: none;
   font-size: 14px;
 }
+.text-footer {
+  color: var(--color-text);
+
+  line-height: 2;
+}
 .footer .row:nth-child(1) .col:nth-child(2) a:hover {
   color: var(--secondary-color);
 }

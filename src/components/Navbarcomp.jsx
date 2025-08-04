@@ -8,16 +8,28 @@ import {
   Button,
 } from "react-bootstrap";
 import { navLinks } from "./../data/index";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom"; // Impor useNavigate
 import { useState, useEffect } from "react";
 import logo from "../assets/img/logo.png";
 
 function Navbarcomp() {
   const [changeColor, setChangeColor] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // State untuk input pencarian
+  const navigate = useNavigate(); // Hook untuk navigasi
 
   const handleCloseMenu = () => setShowMenu(false);
   const handleShowMenu = () => setShowMenu(true);
+
+  // Fungsi untuk menangani submit form pencarian
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim() !== "") {
+      navigate(`/search-page?q=${encodeURIComponent(searchQuery)}`);
+      setSearchQuery(""); // Kosongkan input setelah submit
+      handleCloseMenu(); // Tutup offcanvas jika di mobile
+    }
+  };
 
   const changeBGColor = () => {
     if (window.scrollY > 50) {
@@ -45,7 +57,7 @@ function Navbarcomp() {
         sticky="top"
         style={{ paddingLeft: 0, paddingRight: 0 }}
       >
-        {/* === PERUBAHAN UTAMA DI SINI === */}
+        {/* === Branding Desktop === */}
         <div className="d-none d-lg-block text-center">
           <Navbar.Brand className="navbar-logo my-2 d-inline-block">
             <NavLink
@@ -55,15 +67,13 @@ function Navbarcomp() {
               <img
                 src={logo}
                 alt="Logo Unim"
-                className="me-3" // Margin diubah agar seimbang
-                style={{ width: "90px" }} // Ukuran logo dikecilkan dari 120px
+                className="me-3"
+                style={{ width: "90px" }}
               />
               <div className="d-flex flex-column align-items-center text-center align-middle justify-content-center">
-                {/* Ukuran font dikecilkan menggunakan class fs-4 */}
                 <h1 className="fw-bold fs-4 mb-0">
                   P3M Universitas Islam Majapahit
                 </h1>
-                {/* Ukuran font dikecilkan menggunakan class fs-6 */}
                 <p className="fw-light fs-6 text-start mb-0">
                   Pusat Penelitian, Publikasi dan Pengabdian kepada Masyarakat
                 </p>
@@ -71,22 +81,25 @@ function Navbarcomp() {
             </NavLink>
           </Navbar.Brand>
         </div>
-        {/* === AKHIR PERUBAHAN === */}
 
-        {/* Search Bar Desktop */}
+        {/* === Search Bar Desktop (Sudah Fungsional) === */}
         <div className="d-none d-lg-block w-75 px-4 mt-2 mb-3">
-          <Form className="d-flex">
+          <Form className="d-flex" onSubmit={handleSearchSubmit}>
             <Form.Control
               type="search"
               placeholder="Cari Artikel Atau Informasi"
               className="me-2 rounded-4 "
               aria-label="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Button variant="primary">Cari</Button>
+            <Button variant="primary" type="submit">
+              Cari
+            </Button>
           </Form>
         </div>
 
-        {/* Branding Mobile (Tidak berubah) */}
+        {/* === Branding Mobile === */}
         <div className="d-lg-none d-flex justify-content-between align-items-center w-100 px-3">
           <Navbar.Brand
             as={NavLink}
@@ -110,7 +123,7 @@ function Navbarcomp() {
           />
         </div>
 
-        {/* Offcanvas (Tidak berubah) */}
+        {/* === Offcanvas Menu Mobile === */}
         <Navbar.Offcanvas
           id="offcanvas-navbar-nav"
           aria-labelledby="offcanvas-navbar-label"
@@ -126,17 +139,20 @@ function Navbarcomp() {
             {/* BLOK MENU KHUSUS MOBILE */}
             <div className="d-lg-none">
               <div className="px-3 mb-3">
-                <Form className="d-flex">
+                <Form className="d-flex" onSubmit={handleSearchSubmit}>
                   <Form.Control
                     type="search"
                     placeholder="Ketik pencarian..."
                     className="me-2"
                     aria-label="Search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
-                  <Button variant="primary">Cari</Button>
+                  <Button variant="primary" type="submit">
+                    Cari
+                  </Button>
                 </Form>
               </div>
-
               <Nav className="justify-content-start flex-grow-1 z-3">
                 {navLinks.map((data) => {
                   if (data.subMenu) {

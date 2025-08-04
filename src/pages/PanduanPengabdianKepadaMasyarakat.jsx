@@ -1,12 +1,78 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import Herosection from "../components/Herosection";
 import Faqcomp from "../components/Faqcomp";
 
-// Impor data Anda yang sudah diralat
-import { dokumenPanduanPengabdianMasyarakatMandiriData } from "../data/dokumenPanduanPengabdianMasyarakatMandiri";
+const api = import.meta.env.VITE_API_URL;
 
 const PanduanPengabdianKepadaMasyarakat = () => {
+  // State untuk data, loading, dan error
+  const [panduanData, setPanduanData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const response = await fetch(
+          `${api}/files/type?type=panduan_pengabdian_masyarakat`
+        );
+        if (!response.ok) {
+          throw new Error("Gagal mengambil data dari server.");
+        }
+        const data = await response.json();
+        setPanduanData(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []); // Dependensi kosong agar hanya berjalan sekali
+
+  const renderTimeline = () => {
+    if (loading) {
+      return <p className="text-center">Memuat data...</p>;
+    }
+    if (error) {
+      return <p className="text-center text-danger">{error}</p>;
+    }
+    if (panduanData.length === 0) {
+      return <p className="text-center">Tidak ada dokumen yang ditemukan.</p>;
+    }
+
+    return panduanData
+      .slice()
+      .reverse()
+      .map((item) => (
+        <div className="timeline-item" key={item.id}>
+          <div className="timeline-content shadow-sm">
+            <time>
+              {new Date(item.createdAt).toLocaleDateString("id-ID", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </time>
+            <h3 className="fw-bold">{item.file_name}</h3>
+            <p>{item.file_description}</p>
+            <Button
+              variant="danger"
+              size="sm"
+              href={item.file_url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Lihat Dokumen
+            </Button>
+          </div>
+        </div>
+      ));
+  };
+
   return (
     <div className="panduan-page">
       <Herosection title={"Panduan Pengabdian Kepada Masyarakat"} />
@@ -24,30 +90,7 @@ const PanduanPengabdianKepadaMasyarakat = () => {
           </Row>
           <Row>
             <Col>
-              <div className="timeline-bs">
-                {dokumenPanduanPengabdianMasyarakatMandiriData
-                  .slice()
-                  .reverse()
-                  .map((item) => (
-                    <div key={item.id} className="timeline-item">
-                      <div className="timeline-content shadow-sm">
-                        {/* Menampilkan kembali 'date' dan 'description' */}
-                        <time>{item.date}</time>
-                        <h3 className="fw-bold">{item.title}</h3>
-                        <p>{item.description}</p>
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          href={item.urlDrive}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Lihat Dokumen
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-              </div>
+              <div className="timeline-bs">{renderTimeline()}</div>
             </Col>
           </Row>
         </Container>

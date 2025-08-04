@@ -10,6 +10,9 @@ import ProgramPanduanPengabdianMasyarakatMandiri from "./pages/ProgramPanduanPen
 import InformasiPengabdianKepadaMasyarakat from "./pages/InformasiPengabdianKepadaMasyarakat";
 import SKPengabdianKepadaMasyarakat from "./pages/SKPengabdianKepadaMasyarakat";
 import BukuPanduanKKNTematik from "./pages/BukuPanduanKKNTematik";
+import AllInformasiKKNUNIM from "./pages/AllInformasiKKNUNIM";
+import AllInformasiPengabdianKepadaMasyarakat from "./pages/AllInformasiPengabdianKepadaMasyarakat";
+import AllInformasiPenelitian from "./pages/AllInformasiPenelitian";
 
 import BukuPanduanKKNPMM from "./pages/BukuPanduanKKNPMM";
 import SKKKNTematikUNIM from "./pages/SKKKNTematikUNIM";
@@ -109,12 +112,22 @@ function App() {
         <Route path="/buku-panduan-kkn-pmm" Component={BukuPanduanKKNPMM} />
         <Route path="/sk-kkn-pmm-unim" Component={SKKKNPMMUNIM} />
         {/* akhir sub menu kkn */}
-        <Route path="/article" Component={ArticlePage} />
+        <Route path="/article/:slug" Component={ArticlePage} />
         <Route path="/search-page" Component={SearchPage} />
         <Route path="/syarat" Component={Syarat} />
         <Route path="/testi" Component={Testimonial} />
         <Route path="/faq" Component={Faq} />
         <Route path="/hubungi-kami" Component={HubungiKami} />
+
+        <Route path="/all-informasi-kkn-unim" Component={AllInformasiKKNUNIM} />
+        <Route
+          path="/all-informasi-pengabdian-kepada-masyarakat"
+          Component={AllInformasiPengabdianKepadaMasyarakat}
+        />
+        <Route
+          path="/all-informasi-penelitian"
+          Component={AllInformasiPenelitian}
+        />
       </Route>
 
       {/* Rute Catch-all untuk halaman 404 Not Found. Diletakkan di paling akhir. */}

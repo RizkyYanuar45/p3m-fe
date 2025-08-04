@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -7,23 +7,13 @@ import {
   Button,
   ListGroup,
 } from "react-bootstrap";
-import Navbarcomp from "../components/Navbarcomp";
 import Herosection from "../components/Herosection";
 import Faqcomp from "../components/Faqcomp";
 
-// Impor semua data dari file dokumenPenelitian.js
-import {
-  PendirianP3MData,
-  SOPP3MData,
-  RencanaIndukPenelitianData,
-  TemplateData,
-  FormSPTJMData,
-  DokumenPenelitianData,
-  DokumenPenelitianLaporanKemajuanRisetData,
-  DokumenPenelitianAkhirRisetKolaborasiData,
-} from "../data/dokumenPenelitian";
+const api = import.meta.env.VITE_API_URL;
 
 // Helper function untuk merender daftar dokumen
+// Properti disesuaikan dengan respons API: file_name dan file_url
 const renderDocumentList = (data) => (
   <ListGroup variant="flush">
     {data.map((doc) => (
@@ -31,11 +21,11 @@ const renderDocumentList = (data) => (
         key={doc.id}
         className="d-flex justify-content-between align-items-center"
       >
-        <span>{doc.title}</span>
+        <span>{doc.file_name}</span>
         <Button
           variant="danger"
           size="sm"
-          href={doc.driveUrl}
+          href={doc.file_url}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -47,6 +37,72 @@ const renderDocumentList = (data) => (
 );
 
 const DokumenPenelitian = () => {
+  // State untuk data yang sudah dikelompokkan, loading, dan error
+  const [groupedData, setGroupedData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchAndGroupData = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const response = await fetch(`${api}/dokumenpen/`);
+        if (!response.ok) {
+          throw new Error("Gagal memuat data dari server.");
+        }
+        const documents = await response.json();
+
+        // Logika untuk mengelompokkan dokumen berdasarkan kategori
+        const groups = documents.reduce((acc, doc) => {
+          const categoryName = doc.kategori.name;
+          if (!acc[categoryName]) {
+            acc[categoryName] = {
+              id: doc.kategori.id,
+              name: categoryName,
+              documents: [],
+            };
+          }
+          acc[categoryName].documents.push(doc);
+          return acc;
+        }, {});
+
+        // Ubah objek grup menjadi array dan simpan ke state
+        setGroupedData(Object.values(groups));
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAndGroupData();
+  }, []); // Dependency array kosong agar hanya berjalan sekali
+
+  const renderAccordion = () => {
+    if (loading) {
+      return <p className="text-center">Memuat dokumen...</p>;
+    }
+    if (error) {
+      return <p className="text-center text-danger">{error}</p>;
+    }
+    if (groupedData.length === 0) {
+      return <p className="text-center">Tidak ada dokumen yang ditemukan.</p>;
+    }
+
+    return (
+      <Accordion alwaysOpen flush>
+        {groupedData.map((category) => (
+          <Accordion.Item eventKey={category.id.toString()} key={category.id}>
+            <Accordion.Header>{category.name}</Accordion.Header>
+            <Accordion.Body>
+              {renderDocumentList(category.documents)}
+            </Accordion.Body>
+          </Accordion.Item>
+        ))}
+      </Accordion>
+    );
+  };
+
   return (
     <div className="dokumen-page">
       <Herosection title={"Pusat Dokumen P3M"} />
@@ -63,70 +119,8 @@ const DokumenPenelitian = () => {
           </Row>
           <Row>
             <Col>
-              {/* Tambahkan properti 'alwaysOpen' di sini */}
-              <Accordion alwaysOpen flush>
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header>SK Pendirian P3M</Accordion.Header>
-                  <Accordion.Body>
-                    {renderDocumentList(PendirianP3MData)}
-                  </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="1">
-                  <Accordion.Header>SOP P3M</Accordion.Header>
-                  <Accordion.Body>
-                    {renderDocumentList(SOPP3MData)}
-                  </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="2">
-                  <Accordion.Header>Rencana Induk Penelitian</Accordion.Header>
-                  <Accordion.Body>
-                    {renderDocumentList(RencanaIndukPenelitianData)}
-                  </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="3">
-                  <Accordion.Header>Template</Accordion.Header>
-                  <Accordion.Body>
-                    {renderDocumentList(TemplateData)}
-                  </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="4">
-                  <Accordion.Header>
-                    Form SPTJM & Pernyataan Luaran
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    {renderDocumentList(FormSPTJMData)}
-                  </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="5">
-                  <Accordion.Header>Dokumen Penelitian</Accordion.Header>
-                  <Accordion.Body>
-                    {renderDocumentList(DokumenPenelitianData)}
-                  </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="6">
-                  <Accordion.Header>Laporan Kemajuan Riset</Accordion.Header>
-                  <Accordion.Body>
-                    {renderDocumentList(
-                      DokumenPenelitianLaporanKemajuanRisetData
-                    )}
-                  </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="7">
-                  <Accordion.Header>Akhir Riset Kolaborasi</Accordion.Header>
-                  <Accordion.Body>
-                    {renderDocumentList(
-                      DokumenPenelitianAkhirRisetKolaborasiData
-                    )}
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
+              {/* Panggil fungsi render dinamis */}
+              {renderAccordion()}
             </Col>
           </Row>
         </Container>
