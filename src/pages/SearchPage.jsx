@@ -123,7 +123,12 @@ const SearchPage = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="me-2"
         />
-        <Button type="submit">Cari</Button>
+        <Button
+          type="submit"
+          style={{ backgroundColor: "#e85a0e", borderColor: "#e85a0e" }}
+        >
+          Cari
+        </Button>
       </Form>
       <Container>
         <Row>

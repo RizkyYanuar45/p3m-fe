@@ -93,7 +93,11 @@ function Navbarcomp() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Button variant="primary" type="submit">
+            <Button
+              variant="primary"
+              type="submit"
+              style={{ backgroundColor: "#e85a0e", borderColor: "#e85a0e" }}
+            >
               Cari
             </Button>
           </Form>

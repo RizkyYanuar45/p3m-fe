@@ -28,6 +28,7 @@ const renderDocumentList = (data) => (
           href={doc.file_url}
           target="_blank"
           rel="noopener noreferrer"
+          style={{ backgroundColor: "#e85a0e", borderColor: "#e85a0e" }}
         >
           Lihat Dokumen
         </Button>

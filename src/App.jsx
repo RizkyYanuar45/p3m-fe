@@ -24,10 +24,7 @@ import DokumenPenelitian from "./pages/DokumenPenelitian";
 import InformasiPenelitian from "./pages/InformasiPenelitian";
 import InformasiKKNUNIM from "./pages/InformasiKKNUNIM";
 import SKRektor from "./pages/SKRektor";
-import Sepatupage from "./pages/Sepatupage";
-import Syarat from "./pages/Syarat";
-import Testimonial from "./pages/Testimonial";
-import HubungiKami from "./pages/HubungiKami";
+
 import Faq from "./pages/Faq";
 import Footercomp from "./components/Footercomp";
 import Navbarcomp from "./components/Navbarcomp";
@@ -83,7 +80,7 @@ function App() {
           Component={ProgramPanduanPengabdianMasyarakatMandiri}
         />
         <Route path="/sk-rektor" Component={SKRektor} />
-        <Route path="/kelas" Component={Sepatupage} />
+
         <Route path="/informasi-penelitian" Component={InformasiPenelitian} />
         <Route
           path="/panduan-pengabdian-kepada-masyarakat"
@@ -114,10 +111,8 @@ function App() {
         {/* akhir sub menu kkn */}
         <Route path="/article/:slug" Component={ArticlePage} />
         <Route path="/search-page" Component={SearchPage} />
-        <Route path="/syarat" Component={Syarat} />
-        <Route path="/testi" Component={Testimonial} />
+
         <Route path="/faq" Component={Faq} />
-        <Route path="/hubungi-kami" Component={HubungiKami} />
 
         <Route path="/all-informasi-kkn-unim" Component={AllInformasiKKNUNIM} />
         <Route

@@ -22,7 +22,11 @@ const ArticleCard = ({ image, title, author, date, excerpt, delay, slug }) => {
       <p>{excerpt}</p>
 
       <div className="d-grid mt-auto">
-        <NavLink to={`/article/${slug}`} className="btn btn-primary rounded-1">
+        <NavLink
+          to={`/article/${slug}`}
+          className="btn btn-primary rounded-1"
+          style={{ backgroundColor: "#e85a0e", borderColor: "#e85a0e" }}
+        >
           Baca Selengkapnya
         </NavLink>
       </div>
