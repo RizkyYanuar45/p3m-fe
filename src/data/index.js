@@ -27,6 +27,8 @@ export const navLinks = [
       { id: 1, path: "tentang", text: "Tentang P3M" },
       { id: 2, path: "pimpinan-lembaga", text: "Pimpinan Lembaga" },
       { id: 3, path: "struktur-organisasi", text: "Struktur Organisasi" },
+      { id: 4, path: "dokumen-p3m", text: "Dokumen P3M" },
+      { id: 5, path: "luaran-p3m", text: "Luaran P3M" },
     ],
   },
   {
@@ -108,9 +110,26 @@ export const navLinks = [
     path: "",
     text: "Kuisioner/Komplain",
     subMenu: [
-      { id: 1, path: "/kuispen", text: "Penelitian" },
-      { id: 2, path: "/kuispengab", text: "Pengabdian Kepada Masyarakat" },
-      { id: 3, path: "/kuiskkn", text: "KKN" },
+      {
+        id: 1,
+        path: "https://docs.google.com/forms/d/17VUsm6-JGP6wSN5XDaGDUfMetjYCGxUTnRMituPdcxI/viewform?edit_requested=true",
+        text: "Survey Kepuasan Pelayanan P3M",
+      },
+      {
+        id: 2,
+        path: "https://forms.gle/F4ej5fJJF7vzX6CFA",
+        text: "Survey Kepuasan Mitra P3M",
+      },
+      {
+        id: 3,
+        path: "https://forms.gle/Cn65r9inDa3RNEVr5",
+        text: "Survey Kepuasan Mitra Penelitian",
+      },
+      {
+        id: 4,
+        path: "https://forms.gle/https://forms.gle/bihQBd1qJmd5HEVY8",
+        text: "Survey Kepuasan Mitra KKN",
+      },
     ],
   },
   {

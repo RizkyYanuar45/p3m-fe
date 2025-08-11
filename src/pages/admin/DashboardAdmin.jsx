@@ -1,6 +1,8 @@
 import { useState } from "react";
 import CrudPimpinanLembaga from "./CrudPimpinanLembaga";
 import CrudPanduanPenelitian from "./CrudPanduanPenelitian";
+import CrudDokumenP3M from "./CrudDokumenP3M";
+import CrudLuaranP3M from "./CrudLuaranP3M";
 
 import CrudProgramPanduanPengabdianMasyarakat from "./CrudProgramPanduanPengabdianMasyarakat";
 import CrudSKRektor from "./CrudSKRektor";
@@ -40,6 +42,16 @@ const menuList = [
         key: "strukturOrganisasi",
         label: "Struktur Organisasi",
         component: <CrudStrukturOrganisasi />,
+      },
+      {
+        key: "dokumenP3M",
+        label: "Dokumen P3M",
+        component: <CrudDokumenP3M />,
+      },
+      {
+        key: "luaranP3M",
+        label: "Luaran P3M",
+        component: <CrudLuaranP3M />,
       },
     ],
   },

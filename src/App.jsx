@@ -13,7 +13,7 @@ import BukuPanduanKKNTematik from "./pages/BukuPanduanKKNTematik";
 import AllInformasiKKNUNIM from "./pages/AllInformasiKKNUNIM";
 import AllInformasiPengabdianKepadaMasyarakat from "./pages/AllInformasiPengabdianKepadaMasyarakat";
 import AllInformasiPenelitian from "./pages/AllInformasiPenelitian";
-
+import LuaranP3M from "./pages/LuaranP3M";
 import BukuPanduanKKNPMM from "./pages/BukuPanduanKKNPMM";
 import SKKKNTematikUNIM from "./pages/SKKKNTematikUNIM";
 import SKKKNPMMUNIM from "./pages/SKKKNPMMUNIM";
@@ -28,6 +28,7 @@ import SKRektor from "./pages/SKRektor";
 import Faq from "./pages/Faq";
 import Footercomp from "./components/Footercomp";
 import Navbarcomp from "./components/Navbarcomp";
+import HubungiKami from "./pages/HubungiKami";
 import ProgramPengabdianMasyarakat from "./pages/ProgramPengabdianMasyarakat";
 import Login from "./pages/admin/login";
 import DashboardAdmin from "./pages/admin/DashboardAdmin";
@@ -35,6 +36,7 @@ import RequireAuth from "./pages/admin/RequireAuth";
 import NotFoundPage from "./pages/NotFoundPage";
 import ArticlePage from "./pages/ArticlePage";
 import SearchPage from "./pages/SearchPage";
+import DokumenP3M from "./pages/DokumenP3M";
 
 // Komponen Layout untuk halaman publik yang memiliki Navbar dan Footer
 const PublicLayout = () => {
@@ -66,6 +68,7 @@ function App() {
       {/* Grup Rute Publik (semua yang ada di sini akan memiliki Navbar & Footer) */}
       <Route element={<PublicLayout />}>
         <Route path="/" Component={Homepage} />
+        <Route path="/dokumen-p3m" Component={DokumenP3M} />
         <Route path="/tentang" Component={Tentang} />
         <Route path="/pimpinan-lembaga" Component={PimpinanLembaga} />
         <Route path="/struktur-organisasi" Component={StrukturOrganisasi} />
@@ -123,6 +126,8 @@ function App() {
           path="/all-informasi-penelitian"
           Component={AllInformasiPenelitian}
         />
+        <Route path="/luaran-p3m" Component={LuaranP3M} />
+        <Route path="/hubungi-kami" Component={HubungiKami} />
       </Route>
 
       {/* Rute Catch-all untuk halaman 404 Not Found. Diletakkan di paling akhir. */}

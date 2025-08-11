@@ -19,26 +19,27 @@ const Tentang = () => {
             <Col md={6} className="mb-4 mb-md-0">
               <h2 className="fw-bold mb-3">Visi</h2>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                euismod, nisl nec ultricies lacinia, nisl nisl aliquet nisl,
-                eget aliquam nisl nisl sit amet nisl.
+                Mewujudkan Universitas Islam Majapahit yang unggul, berbudaya,
+                bermartabat dan rahmatan lil’alamin.
               </p>
             </Col>
             <Col md={6}>
               <h2 className="fw-bold mb-3">Misi</h2>
               <ul>
                 <li>
-                  Misi pertama, lorem ipsum dolor sit amet, consectetur
-                  adipiscing elit.
+                  Misi pertama, Membangun infrastruktur pendidikan yang
+                  bercirikan budaya Majapahit dan Islam yang meliputi: budaya
+                  akademik, corporate culture, seni dan bangunan.
                 </li>
                 <li>
-                  Misi kedua, fusce dapibus, tellus ac cursus commodo, tortor
-                  mauris.
+                  Misi kedua, Mengembangkan keunggulan pendidikan, tenaga
+                  kependidikan, akademik, proses pembelajaran, sarana prasarana
+                  dan lulusan.
                 </li>
-                <li>Misi ketiga, nulla vitae elit libero, a pharetra augue.</li>
                 <li>
-                  Misi keempat, praesent commodo cursus magna, vel scelerisque
-                  nisl.
+                  Misi ketiga,Menghasilkan kinerja Tridharma Perguruan Tinggi
+                  yang berkontribusi terhadap kemajuan peradapan dan kelestarian
+                  kehidupan.
                 </li>
               </ul>
             </Col>
@@ -50,15 +51,30 @@ const Tentang = () => {
           {/* Peran & Arah Section Start */}
           <Row className="py-5 align-items-center">
             <Col md={6}>
-              <h2 className="fw-bold mb-3">Peran & Arah Pengembangan</h2>
+              <h2 className="fw-bold mb-3">Tujuan</h2>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam,
-                quasi. Eum laudantium, quae beatae optio iusto unde, maxime
-                debitis facilis alias laboriosam officiis! Asperiores, eius.
+                1. Mengembangkan penelitian yang mengeksplorasi kearifan budaya
+                Majapahit dan nilai-nilai Islam dalam berbagai bidang ilmu,
+                termasuk sosial, seni, dan pendidikan, untuk memperkuat
+                identitas unik universitas.
               </p>
               <p>
-                Praesent commodo cursus magna, vel scelerisque nisl consectetur
-                et. Donec ullamcorper nulla non metus auctor fringilla.
+                2. Menyediakan penelitian yang mendukung pengembangan metode dan
+                teknologi pembelajaran inovatif yang dapat meningkatkan kualitas
+                tenaga pendidik, pembelajaran, dan fasilitas pendidikan di
+                lingkungan universitas.
+              </p>
+              <p>
+                3. Melakukan penelitian yang mendukung kontribusi universitas
+                terhadap peradaban modern dan pelestarian lingkungan, terutama
+                yang sesuai dengan kebutuhan dan tantangan masyarakat sekitar,
+                untuk keberlanjutan kehidupan sosial dan alam.
+              </p>
+              <p>
+                4. Mengarahkan penelitian pada peningkatan kompetensi lulusan
+                agar siap bersaing secara global dan mampu berkontribusi secara
+                positif di masyarakat, khususnya di bidang keahlian yang relevan
+                dengan kebutuhan lokal dan nasional.
               </p>
             </Col>
             <Col md={6}>
@@ -77,22 +93,28 @@ const Tentang = () => {
           {/* Sejarah Section Start */}
           <Row className="py-5">
             <Col>
-              <h2 className="fw-bold text-center mb-4">Sejarah Singkat</h2>
+              <h2 className="fw-bold text-center mb-4">Sasaran</h2>
               <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Laboriosam hic voluptas cumque id eius totam nam nisi nihil quo,
-                reprehenderit doloribus autem, sint error, adipisci veniam cum
-                laudantium laborum cupiditate necessitatibus unde molestiae
-                voluptatibus! Odit explicabo ab, tempore beatae quam voluptas
-                deleniti repudiandae animi?
+                1. Meningkatkan kualitas visi, misi, tujuan, sasaran strategis,
+                serta rencana pengembangan.
               </p>
               <p>
-                Minus impedit dignissimos nihil provident error. Soluta,
-                repellat vel repellendus id odio saepe velit ab eos beatae?
-                Impedit itaque quis esse tempore quaerat officia tenetur, fuga
-                odit illo ullam temporibus sint nihil voluptate numquam vitae
-                est?
+                2. Mengoptimalkan tata kelola, penjaminan mutu, dan kolaborasi.
               </p>
+              <p>
+                3. Meningkatkan kualitas sumber daya manusia, sarana prasarana,
+                dan sistem informasi.
+              </p>
+              <p>4. Meningkatkan kualitas dan jumlah sumber daya manusia.</p>
+              <p>
+                5. Memperbaiki pengelolaan keuangan serta sarana dan prasarana.
+              </p>
+              <p>6. Meningkatkan mutu pendidikan dan proses pembelajaran.</p>
+              <p>7. Meningkatkan kualitas dan jumlah penelitian.</p>
+              <p>
+                8. Memperkuat kualitas kegiatan pengabdian kepada masyarakat.
+              </p>
+              <p>9. Meningkatkan kualitas luaran dan publikasi ilmiah.</p>
             </Col>
           </Row>
           {/* Sejarah Section End */}
