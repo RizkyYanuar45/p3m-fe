@@ -49,10 +49,12 @@ function Footercomp() {
             <h5 className="fw-bold mt-lg-0 mt-5">Sosmed</h5>
 
             <div className="social mt-3">
-              <i className="fa-brands fa-facebook"></i>
-              <i className="fa-brands fa-twitter"></i>
-              <i className="fa-brands fa-linkedin"></i>
-              <i className="fa-brands fa-youtube"></i>
+              <a
+                href="https://www.youtube.com/@user-nl3vs6fw4o"
+                className="text-decoration-none text-black"
+              >
+                <i className="fa-brands fa-youtube"></i>
+              </a>
             </div>
           </Col>
         </Row>

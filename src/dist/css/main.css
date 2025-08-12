@@ -55,11 +55,17 @@
 }
 
 /* Style for dropdown links on HOVER or FOCUS (when clicked) */
-.dropdown-menu .dropdown-item:hover,
+
 .dropdown-menu .dropdown-item:focus {
   color: var(--navbar-color) !important; /* Sets text to white */
   background-color: var(
     --secondary-color
+  ) !important; /* Sets background to your red theme color */
+}
+.dropdown-menu .dropdown-item:hover {
+  color: var(--navbar-color) !important; /* Sets text to white */
+  background-color: var(
+    --color-text
   ) !important; /* Sets background to your red theme color */
 }
 
