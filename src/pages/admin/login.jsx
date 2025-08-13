@@ -64,6 +64,7 @@ const Login = () => {
     >
       {/* Background image and overlay */}
       <div
+        loading="lazy"
         style={{
           position: "absolute",
           top: 0,
