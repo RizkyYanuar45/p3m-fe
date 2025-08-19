@@ -73,7 +73,7 @@ const HomeCard = ({ showViewAllButton = true, title = "null" }) => {
             <div className="position-relative news-image-container">
               <Card.Img
                 variant="top"
-                src={`${backendUrl}/${item.thumbnail.replace(/\\/g, "/")}`}
+                src={`${backendUrl}${item.thumbnail.replace(/\\/g, "/")}`}
                 alt={item.title}
                 className="news-image"
               />
