@@ -127,7 +127,7 @@ const CrudSKPengabdian = () => {
 
   return (
     <div>
-      <h3>SK Rektor</h3>
+      <h3>SK Rektor Pengabdian</h3>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form
         onSubmit={handleSubmit}

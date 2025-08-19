@@ -161,7 +161,7 @@ const CrudInformasiKKN = () => {
 
   return (
     <div>
-      <h2>Informasi Penelitian</h2>
+      <h2>Informasi KKN</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form
         onSubmit={handleSubmit}

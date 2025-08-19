@@ -94,7 +94,7 @@ const InformasiKKNUNIM = () => {
                 Informasi KKN UNIM
               </h1>
               <p className="text-center animate__animated animate__fadeInUp animate__fast">
-                Jelajahi berbagai artikel dan informasi penelitian terbaru kami.
+                Jelajahi berbagai artikel dan informasi KKN terbaru kami.
               </p>
             </Col>
           </Row>

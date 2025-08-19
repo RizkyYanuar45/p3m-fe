@@ -91,7 +91,7 @@ const CrudPimpinanLembaga = () => {
 
   return (
     <div>
-      <h3>Struktur Organisasi - Upload Foto</h3>
+      <h3>Pimpinan Lembaga - Upload Foto</h3>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form
         onSubmit={handleUpload}

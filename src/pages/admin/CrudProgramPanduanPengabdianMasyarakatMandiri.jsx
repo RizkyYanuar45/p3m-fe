@@ -369,7 +369,7 @@ const CrudProgramPanduan = () => {
         </table>
       )}
       <hr className=" mt-5" />
-      <h2 className=" mt-5">Informasi Penelitian</h2>
+      <h2 className=" mt-5">Informasi Panduan Pengabdian Masyarakat</h2>
       {errorArtikel && <p style={{ color: "red" }}>{errorArtikel}</p>}
       <form
         onSubmit={handleSubmitArticle}

@@ -163,7 +163,7 @@ const CrudInformasiPengabdian = () => {
 
   return (
     <div>
-      <h2>Informasi Penelitian</h2>
+      <h2>Informasi Pengabdian</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form
         onSubmit={handleSubmit}
