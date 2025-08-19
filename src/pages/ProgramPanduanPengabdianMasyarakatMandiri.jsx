@@ -137,7 +137,7 @@ const ProgramPanduanPengabdianMasyarakatMandiri = () => {
               articles.map((artikel, index) => (
                 <Col lg={4} md={6} sm={12} className="mb-4" key={artikel.id}>
                   <ArticleCard
-                    image={`${backendUrl}/${artikel.thumbnail.replace(
+                    image={`${backendUrl}${artikel.thumbnail.replace(
                       /\\/g,
                       "/"
                     )}`}

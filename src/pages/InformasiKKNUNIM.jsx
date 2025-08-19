@@ -68,7 +68,7 @@ const InformasiKKNUNIM = () => {
     return articles.map((artikel, index) => (
       <Col lg={4} md={6} sm={12} className="mb-4" key={artikel.id}>
         <ArticleCard
-          image={`${backendUrl}/${artikel.thumbnail.replace(/\\/g, "/")}`}
+          image={`${backendUrl}${artikel.thumbnail.replace(/\\/g, "/")}`}
           title={artikel.title}
           author={artikel.author}
           slug={artikel.slug} // Tambahkan slug untuk link detail

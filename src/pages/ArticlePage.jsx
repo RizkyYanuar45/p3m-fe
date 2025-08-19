@@ -91,7 +91,7 @@ const ArticlePage = () => {
 
           {/* Thumbnail Artikel */}
           <Image
-            src={`${backendUrl}/${article.thumbnail.replace(/\\/g, "/")}`}
+            src={`${backendUrl}${article.thumbnail.replace(/\\/g, "/")}`}
             alt={article.title}
             fluid
             rounded

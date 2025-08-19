@@ -70,7 +70,7 @@ const InformasiPenelitian = () => {
     return articles.map((artikel, index) => (
       <Col lg={4} md={6} sm={12} className="mb-4" key={artikel.id}>
         <ArticleCard
-          image={`${backendUrl}/${artikel.thumbnail.replace(/\\/g, "/")}`}
+          image={`${backendUrl}${artikel.thumbnail.replace(/\\/g, "/")}`}
           title={artikel.title}
           author={artikel.author}
           date={new Date(artikel.published_date).toLocaleDateString("id-ID", {

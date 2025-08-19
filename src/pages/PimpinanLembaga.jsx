@@ -54,7 +54,7 @@ const PimpinanLembaga = () => {
       <img
         key={image.id}
         // Perbaiki path gambar dari backslash (\) menjadi forward slash (/)
-        src={`${backendUrl}/${image.image.replace(/\\/g, "/")}`}
+        src={`${backendUrl}${image.image.replace(/\\/g, "/")}`}
         alt={image.alt}
         className="img-fluid shadow-lg rounded mb-4"
       />

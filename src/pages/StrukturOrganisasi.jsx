@@ -50,7 +50,7 @@ const StrukturOrganisasi = () => {
     return baganStruktur.map((bagan) => (
       <img
         key={bagan.id}
-        src={`${backendUrl}/${bagan.image.replace(/\\/g, "/")}`}
+        src={`${backendUrl}${bagan.image.replace(/\\/g, "/")}`}
         alt={bagan.alt || "Bagan Struktur Organisasi"}
         className="img-fluid shadow-lg rounded mb-4"
       />

@@ -133,7 +133,7 @@ const CrudStrukturOrganisasi = () => {
               }}
             >
               <img
-                src={`${backendUrl}/${img.image}`}
+                src={`${backendUrl}${img.image}`}
                 alt={img.alt}
                 style={{
                   maxWidth: 180,

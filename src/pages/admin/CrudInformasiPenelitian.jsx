@@ -249,7 +249,7 @@ const CrudInformasiPenelitian = () => {
                 <td>{idx + 1}</td>
                 <td>
                   <img
-                    src={`${backendUrl}/${item.thumbnail}`}
+                    src={`${backendUrl}${item.thumbnail}`}
                     alt={item.title}
                     width="100"
                   />
