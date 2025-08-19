@@ -4,6 +4,7 @@ import CrudPanduanPenelitian from "./CrudPanduanPenelitian";
 import CrudDokumenP3M from "./CrudDokumenP3M";
 import CrudLuaranP3M from "./CrudLuaranP3M";
 
+import CrudSKKKNPMM from "./CrudSKKKNPMM";
 import CrudProgramPanduanPengabdianMasyarakat from "./CrudProgramPanduanPengabdianMasyarakat";
 import CrudSKRektor from "./CrudSKRektor";
 import CrudPanduanPengabdianMasyarakat from "./CrudPanduanPengabdianMasyarakat";
@@ -136,7 +137,7 @@ const menuList = [
       {
         key: "skKKNPMM",
         label: "SK KKN PMM UNIM",
-        component: <CrudSKKKNTematik />,
+        component: <CrudSKKKNPMM />,
       },
     ],
   },
