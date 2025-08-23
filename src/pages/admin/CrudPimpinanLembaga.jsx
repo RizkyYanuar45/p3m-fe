@@ -8,6 +8,7 @@ const CrudPimpinanLembaga = () => {
   const [altText, setAltText] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [notif, setNotif] = useState(""); // Tambahkan state notifikasi
 
   // GET: Mengambil data dengan fetch
   useEffect(() => {
@@ -40,17 +41,18 @@ const CrudPimpinanLembaga = () => {
       return;
     }
     setError("");
+    setNotif("Mengunggah file...");
 
     const formData = new FormData();
     formData.append("image", file);
-    formData.append("alt", altText || "Struktur Pimpinan Lembaga");
-    formData.append("type", "pimpinan_lembaga");
+    formData.append("alt", altText || "Struktur Organisasi");
+    formData.append("type", "struktur_organisasi");
 
     try {
       const response = await fetch(`${api}/profile/add`, {
         method: "POST",
         body: formData,
-        credentials: "include", // Untuk mengirim cookie otentikasi
+        credentials: "include",
       });
 
       const newData = await response.json();
@@ -58,11 +60,18 @@ const CrudPimpinanLembaga = () => {
         throw new Error(newData.message || "Gagal mengunggah file.");
       }
 
+      setNotif("Upload berhasil!");
       setImages((prev) => [...prev, newData]);
       setFile(null);
       setAltText("");
       e.target.reset();
+
+      // Tunggu sebentar lalu refresh window (atau fetch ulang data)
+      setTimeout(() => {
+        window.location.reload();
+      }, 1200);
     } catch (err) {
+      setNotif("");
       setError(err.message);
     }
   };

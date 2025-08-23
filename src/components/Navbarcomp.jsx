@@ -10,7 +10,7 @@ import {
 import { navLinks } from "./../data/index";
 import { NavLink, useNavigate } from "react-router-dom"; // Impor useNavigate
 import { useState, useEffect } from "react";
-import logo from "../assets/img/logo.png";
+import logo from "../assets/img/logo.webp";
 
 function Navbarcomp() {
   const [changeColor, setChangeColor] = useState(false);
