@@ -16,7 +16,7 @@ const CrudSKPengabdian = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `${api}/files/type?type=sk_rektor_penelitian`
+          `${api}/files/type?type=sk_rektor_pengabdian_masyarakat`
         );
         if (!response.ok) {
           throw new Error("Gagal mengambil data dari server.");
@@ -65,7 +65,10 @@ const CrudSKPengabdian = () => {
       }
     } else {
       // Logika TAMBAH (POST) dengan fetch
-      const dataToSend = { ...form, file_type: "sk_rektor_penelitian" };
+      const dataToSend = {
+        ...form,
+        file_type: "sk_rektor_pengabdian_masyarakat",
+      };
       try {
         const response = await fetch(`${api}/files/add`, {
           method: "POST",
