@@ -22,10 +22,7 @@ const CrudInformasiPengabdian = () => {
         theme: "snow",
         placeholder: "Tulis konten artikel di sini...",
         modules: {
-          toolbar: [
-            ["bold", "italic", "underline"],
-            ["link", "image"],
-          ],
+          toolbar: [["bold", "italic", "underline"], ["link"]],
         },
       });
       quillInstanceRef.current = quill;
@@ -202,6 +199,7 @@ const CrudInformasiPengabdian = () => {
           <label>Thumbnail (Gambar):</label>
           <br />
           <small>
+            ukuran maksimal gambar 10 MB
             {editId ? "Pilih file baru untuk mengganti thumbnail." : ""}
           </small>
           <br />

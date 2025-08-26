@@ -102,6 +102,7 @@ const CrudStrukturOrganisasi = () => {
           borderRadius: "5px",
         }}
       >
+        <small>ukuran maksimal gambar 10 MB</small>
         <input
           type="file"
           accept="image/*"
