@@ -127,8 +127,6 @@ const DokumenP3M = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };

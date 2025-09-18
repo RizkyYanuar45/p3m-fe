@@ -93,8 +93,6 @@ const SKKKNTematikUNIM = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };

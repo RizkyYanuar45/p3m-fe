@@ -95,8 +95,6 @@ const SKPengabdianKepadaMasyarakat = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };

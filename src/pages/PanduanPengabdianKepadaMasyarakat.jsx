@@ -96,8 +96,6 @@ const PanduanPengabdianKepadaMasyarakat = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };

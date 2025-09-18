@@ -4,9 +4,7 @@ import Faqcomp from "../components/Faqcomp";
 const Faq = () => {
   return (
     <div>
-      <div className="faq pt-5">
-        <Faqcomp />
-      </div>
+      <div className="faq pt-5"></div>
     </div>
   );
 };

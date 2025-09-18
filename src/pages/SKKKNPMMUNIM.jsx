@@ -93,8 +93,6 @@ const SKKKNPMMUNIM = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };

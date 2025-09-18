@@ -95,8 +95,6 @@ const BukuPanduanKKNPMM = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };

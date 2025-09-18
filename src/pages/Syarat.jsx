@@ -82,7 +82,6 @@ const Syarat = () => {
           </Row>
         </Container>
       </div>
-      <Faqcomp />
     </div>
   );
 };

@@ -56,7 +56,6 @@ const Sepatupage = () => {
           </Row>
         </Container>
       </div>
-      <Faqcomp />
     </div>
   );
 };

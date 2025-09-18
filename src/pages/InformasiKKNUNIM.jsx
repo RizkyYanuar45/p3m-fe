@@ -102,7 +102,6 @@ const InformasiKKNUNIM = () => {
           <Row className="justify-content-center">{renderContent()}</Row>
         </Container>
       </div>
-      <Faqcomp />
     </div>
   );
 };

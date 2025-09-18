@@ -126,8 +126,6 @@ const DokumenPenelitian = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };

@@ -102,8 +102,6 @@ const SKRektor = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };

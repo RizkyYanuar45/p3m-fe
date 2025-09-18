@@ -97,8 +97,6 @@ const BukuPanduanKKNTematik = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };

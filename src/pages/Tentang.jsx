@@ -122,7 +122,6 @@ const Tentang = () => {
       </div>
 
       {/* FAQ Component Tetap Di Sini */}
-      <Faqcomp />
     </div>
   );
 };

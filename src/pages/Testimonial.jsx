@@ -37,7 +37,6 @@ const Testimonial = () => {
           </Row>
         </Container>
       </div>
-      <Faqcomp />
     </div>
   );
 };

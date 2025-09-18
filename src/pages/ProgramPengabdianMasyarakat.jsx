@@ -92,8 +92,6 @@ const ProgramPengabdianMasyarakat = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };

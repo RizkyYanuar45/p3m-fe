@@ -161,8 +161,6 @@ const ProgramPanduanPengabdianMasyarakatMandiri = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };

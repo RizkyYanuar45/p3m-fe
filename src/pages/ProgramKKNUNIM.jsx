@@ -92,8 +92,6 @@ const ProgramKKNUNIM = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };

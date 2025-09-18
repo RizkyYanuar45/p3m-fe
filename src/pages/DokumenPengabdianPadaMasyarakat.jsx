@@ -126,8 +126,6 @@ const DokumenPengabdianPadaMasyarakat = () => {
           </Row>
         </Container>
       </div>
-
-      <Faqcomp />
     </div>
   );
 };
