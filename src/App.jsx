@@ -108,9 +108,9 @@ function App() {
           path="/buku-panduan-kkn-tematik"
           Component={BukuPanduanKKNTematik}
         />
-        <Route path="/sk-kkn-tematik-unim" Component={SKKKNTematikUNIM} />
+
         <Route path="/buku-panduan-kkn-pmm" Component={BukuPanduanKKNPMM} />
-        <Route path="/sk-kkn-pmm-unim" Component={SKKKNPMMUNIM} />
+
         {/* akhir sub menu kkn */}
         <Route path="/article/:slug" Component={ArticlePage} />
         <Route path="/search-page" Component={SearchPage} />
