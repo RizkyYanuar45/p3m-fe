@@ -52,6 +52,23 @@ const CrudLuaranP3M = () => {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+  const handleDelete = async (id) => {
+    if (window.confirm("Yakin ingin menghapus data ini?")) {
+      try {
+        const response = await fetch(`${api}/youtube/delete/${id}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(responseData.message || "Gagal menghapus data.");
+        }
+        setYoutubeLinks((prev) => prev.filter((item) => item.id !== id));
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,12 +118,6 @@ const CrudLuaranP3M = () => {
       title: item.title,
       link: item.link,
     });
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm("Yakin ingin menghapus data ini?")) {
-      // ... (logika hapus tidak berubah)
-    }
   };
 
   const handleCancel = () => {
