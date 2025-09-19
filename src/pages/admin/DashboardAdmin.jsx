@@ -35,11 +35,6 @@ const menuList = [
     label: "Profil",
     submenus: [
       {
-        key: "pimpinanLembaga",
-        label: "Profil Pimpinan",
-        component: <CrudPimpinanLembaga />,
-      },
-      {
         key: "strukturOrganisasi",
         label: "Struktur Organisasi",
         component: <CrudStrukturOrganisasi />,

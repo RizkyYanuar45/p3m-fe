@@ -91,13 +91,12 @@ export const navLinks = [
         path: "buku-panduan-kkn-tematik",
         text: "Buku Panduan KKN Tematik",
       },
-      { id: 4, path: "sk-kkn-tematik-unim", text: "SK KKN Tematik UNIM" },
+
       {
         id: 5,
         path: "buku-panduan-kkn-pmm",
         text: "Buku Panduan KKN PMM",
       },
-      { id: 6, path: "sk-kkn-pmm-unim", text: "SK KKN PMM UNIM" },
     ],
   },
   {
