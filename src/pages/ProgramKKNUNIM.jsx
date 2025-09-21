@@ -26,67 +26,119 @@ const ProgramKKNUNIM = () => {
           <Row>
             {/* Kolom Kiri */}
             <Col md={6} className="text-column">
-              <h3 className="fw-bold mb-3">Latar Belakang & Tujuan</h3>
+              <h3 className="fw-bold mb-3">
+                {" "}
+                Dasar Pelaksanaan Kuliah Kerja Nyata (KKN)
+              </h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non
-                risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing
-                nec, ultricies sed, dolor. Cras elementum ultrices diam.
-                Maecenas ligula massa, varius a, semper congue, euismod non, mi.
-                Proin porttitor, orci nec nonummy molestie, enim est eleifend
-                mi, non fermentum diam nisl sit amet erat. Duis semper. Duis
-                arcu massa, scelerisque vitae, consequat in, pretium a, enim.
-                Pellentesque congue. Ut in risus volutpat libero pharetra
-                tempor.
-              </p>
-              <p>
-                Cras vestibulum bibendum augue. Praesent egestas leo in pede.
-                Praesent blandit odio eu enim. Pellentesque sed dui ut augue
-                blandit sodales. Vestibulum ante ipsum primis in faucibus orci
-                luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris
-                ac mauris sed pede pellentesque fermentum. Maecenas adipiscing
-                ante non diam.
+                Dasar dari pelaksanaan program Kuliah Kerja Nyata (KKN) yang
+                dilaksanakan di Universitas Islam Majapahit (UNIM) adalah,
+                pertama, Pancasila dan UUD 1945; kedua, Undangundang No. 20
+                Tahun 2003 tentang Pendidikan Nasional, pasal 20 ayat 2
+                “Perguruan tinggi berkewajiban menyelenggarakan pendidikan,
+                penelitian, dan pengabdian masyarakat”; ketiga, Undang-undang
+                No. 12 Tahun 2012 tentang pendidikan tinggi, pasal 24 ayat 2
+                “Perguruan tinggi memiliki otonomi untuk mengelola sendiri
+                lembaganya sebagai pusat penyelenggaraan pendidikan tinggi,
+                penelitian ilmiah, dan pengabdian masyarakat”; keempat, Statuta
+                Universitas Islam Majapahit Pasal 77 ayat 7 huruf (c); kelima,
+                kelima, Strategi jangka panjang Pendidikan Tinggi 2003-2010
+                (HELTS 2003-2010) “Daya saing bangsa seyogyanya ditumbuhkan
+                melalui pengembangan dan layanan masyarakat sebagai bagian yang
+                tidak terpisahkan dari pendidikan.
               </p>
 
-              <h3 className="fw-bold mt-4 mb-3">Lingkup Program</h3>
+              <h3 className="fw-bold mb-3">
+                Tujuan Dan Manfaat Kuliah Kerja Nyata
+              </h3>
               <p>
-                Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan
-                porttitor, facilisis luctus, metus. Phasellus ultrices nulla
-                quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate
-                sem tristique cursus. Nam nulla quam, gravida non, commodo a,
-                sodales sit amet, nisi. Pellentesque fermentum dolor. Aliquam
-                quam lectus, facilisis auctor, ultrices ut, elementum vulputate,
-                nunc.
+                Tujuan adanya kegiatan Kuliah Kerja Nyata di tahun 2025 yaitu:
+                <br />
+                1. Sebagai bentuk penerapan ilmu pengetahuan dan teknologi serta
+                sebagai wujud pengawalan Rencana Induk Penelitian dan Pengabdian
+                kepada Masyarakat dengan indikator adanya peningkatan level
+                keberdayaan (lampiran 1).
+                <br />
+                2. Mengasah critical thinking mahasiswa melalui metode BMC/MMC
+                dalam penyusunan program KKN.
+                <br />
+                3. Mengasah kemampuan soft skill mahasiswa sehingga tumbuh
+                menjadi pribadi yang komunikatif, problem solver, mempunyai jiwa
+                pemimpin, adaptif, mampu bekerja dalam tim, berintegritas, mampu
+                membuat keputusan, kreatif dan dapat diandalkan.
+                <br />
+                4. Mahasiswa Universitas Islam Majapahit (UNIM) bisa berperan
+                sebagai katalisator (catalyst), pembantu proses (process
+                helper), pemberi solusi (solution giver), dan penghubung sumber
+                daya (sources linker) dalam masyarakat.
+              </p>
+              <p>
+                Kuliah Kerja Nyata (KKN) Tematik 2025 memberikan manfaat timbal
+                balik bagi mahasiswa, masyarakat, dan perguruan tinggi.
+                <br />
+                1. Bagi mahasiswa, KKN menjadi sarana untuk menerapkan ilmu
+                secara langsung di lapangan, mengasah keterampilan interpersonal
+                seperti komunikasi dan kepemimpinan, serta memperluas wawasan
+                budaya.
+                <br />
+                2. Masyarakat lokal memperoleh keuntungan dari partisipasi
+                mahasiswa dalam program pembangunan, transfer pengetahuan dan
+                teknologi, serta munculnya inovasi baru yang meningkatkan
+                kemandirian.
+                <br />
+                3. Sementara itu, bagi perguruan tinggi, program ini merupakan
+                implementasi Tri Dharma yang efektif untuk meningkatkan reputasi
+                universitas dan menjalin kemitraan strategis dengan berbagai
+                pihak.
               </p>
             </Col>
 
             {/* Kolom Kanan */}
             <Col md={6} className="text-column">
-              <h3 className="fw-bold mb-3">Metodologi & Pelaksanaan</h3>
+              <h3 className="fw-bold mt-4 mb-3">
+                Pengertian Kuliah Kerja Nyata (KKN)
+              </h3>
               <p>
-                Morbi in sem quis dui placerat ornare. Pellentesque odio nisi,
-                euismod in, pharetra a, ultricies in, diam. Sed arcu. Cras
-                consequat. Praesent dapibus, neque id cursus faucibus, tortor
-                neque egestas auguae, eu vulputate magna eros eu erat. Aliquam
-                erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor,
-                facilisis luctus, metus.
+                KKN itu sendiri merupakan sebuah kegiatan kurikuler karena
+                diakui dalam KRS (mempunyai bobot SKS) dan mempunyai konsekuensi
+                penilaian yang terintegrasikan di dalam proses pembelajaran,
+                sehingga mempunyai konsekuensi mengikat kepada semua Mahasiswa.
+                Sedangkan KKN tematik merupakan sebuah kegiatan yang terjadwal
+                secara akademik di universitas dan dilaksanakan dalam masyarakat
+                diluar kampus dengan harapan mahasiswa dapat berlatih untuk
+                meningkatkan relevansi keilmuan yang telah diperoleh selama
+                duduk di bangku perkuliahan dengan perkembangan dan kebutuhan
+                masyarakat yang sifatnya cenderung majemuk dan menuntut inovasi
+                serta kepiawaian dalam memfasilitasi kebutuhan tersebut,
+                terutama. Oleh karena itu, kegiatan Kuliah Keja Nyata (KKN)
+                tematika diharapkan dapat mensadarkan dan menginisiasi
+                penyelesaian permasalahan yang terjadi di masyarakat dengan
+                pendekatan pasrtisipasi non aktif.
               </p>
+
+              <h3 className="fw-bold mt-4 mb-3">
+                Pentahapan Pelaksanaan Kuliah Kerja Nyata Tematik
+              </h3>
               <p>
-                Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec
-                consectetuer ligula vulputate sem tristique cursus. Nam nulla
-                quam, gravida non, commodo a, sodales sit amet, nisi.
-                Pellentesque fermentum dolor. Aliquam quam lectus, facilisis
-                auctor, ultrices ut, elementum vulputate, nunc. Sed adipiscing
-                ornare risus. Morbi est est, blandit sit amet, sagittis vel,
-                suscipit vel, purus.
-              </p>
-              <h3 className="fw-bold mt-4 mb-3">Kriteria & Evaluasi</h3>
-              <p>
-                Donec consectetuer ligula vulputate sem tristique cursus. Nam
-                nulla quam, gravida non, commodo a, sodales sit amet, nisi.
-                Pellentesque fermentum dolor. Aliquam quam lectus, facilisis
-                auctor, ultrices ut, elementum vulputate, nunc. Sed adipiscing
-                ornare risus. Morbi est est, blandit sit amet, sagittis vel,
-                suscipit vel, purus.
+                Pentahapan yang telah dirancang oleh P3M (Penelitian, Publikasi,
+                dan Pengabdian Kepada Masyarakat) dan diteruskan Panitia
+                penyelenggara KKN Tematik dapat dibagi kedalam tujuh segmen,
+                yakni:
+                <br />
+                1) Penetapan kebijakan umum tentang penyelenggaraan KKN
+                (penetapan paradigma KKN yang hendak dilaksanakan),
+                <br />
+                2) Kegiatan administratif,
+                <br />
+                3) Kuliah pembekalan dan pelatihan secara luring,
+                <br />
+                4) Pelaksanaan kegiatan,
+                <br />
+                5) Pelaporan (individu),
+                <br />
+                6) Penilaian akademik
+                <br />
+                7) Skrining produk luaran program kerja
               </p>
             </Col>
           </Row>

@@ -1,6 +1,6 @@
-import fotoUnim from "../assets/img/foto/fotounim.jpg";
-import fotoUnim3 from "../assets/img/foto/fotounim3.jpg";
-import gedungAlhambra from "../assets/img/foto/gedungAlhambra.jpg";
+import fotoUnim from "../assets/img/foto/fotounim.webp";
+import fotoUnim3 from "../assets/img/foto/fotounim3.webp";
+import gedungAlhambra from "../assets/img/foto/gedungAlhambra.webp";
 
 export const carouselData = [
   {
