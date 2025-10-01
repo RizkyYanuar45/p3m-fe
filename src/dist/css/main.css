@@ -129,7 +129,7 @@ header .container {
   /* Ganti 'HeroImage' dengan path gambar Anda di CSS jika perlu */
   margin-top: 5rem;
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-    url("./../../assets/img/foto/gedungAlhambra.jpg");
+    url("./../../assets/img/foto/gedungAlhambra.webp");
   background-size: cover;
   background-position: center;
   height: 60vh; /* Anda bisa sesuaikan tinggi hero section */

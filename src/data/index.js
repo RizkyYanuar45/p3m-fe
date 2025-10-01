@@ -11,10 +11,9 @@ export const navLinks = [
     text: "Profil",
     subMenu: [
       { id: 1, path: "tentang", text: "Tentang P3M" },
-      { id: 2, path: "pimpinan-lembaga", text: "Pimpinan Lembaga" },
-      { id: 3, path: "struktur-organisasi", text: "Struktur Organisasi" },
-      { id: 4, path: "dokumen-p3m", text: "Dokumen P3M" },
-      { id: 5, path: "luaran-p3m", text: "Luaran P3M" },
+      { id: 2, path: "struktur-organisasi", text: "Struktur Organisasi" },
+      { id: 3, path: "dokumen-p3m", text: "Dokumen P3M" },
+      { id: 4, path: "luaran-p3m", text: "Luaran P3M" },
     ],
   },
   {

@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import Herosection from "../components/Herosection";
 import Faqcomp from "../components/Faqcomp";
 
-import HeroImage from "../assets/img/foto/gedungAlhambra.jpg";
+import HeroImage from "../assets/img/foto/gedungAlhambra.webp";
 
 const Tentang = () => {
   return (

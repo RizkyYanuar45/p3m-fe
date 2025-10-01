@@ -3,7 +3,7 @@ import { Routes, Route, Outlet } from "react-router-dom";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Homepage from "./pages/Homepage";
 import Tentang from "./pages/Tentang";
-import PimpinanLembaga from "./pages/PimpinanLembaga";
+
 import PanduanPenelitian from "./pages/PanduanPenelitian";
 import PanduanPengabdianKepadaMasyarakat from "./pages/PanduanPengabdianKepadaMasyarakat";
 import ProgramPanduanPengabdianMasyarakatMandiri from "./pages/ProgramPanduanPengabdianMasyarakatMandiri";
@@ -70,7 +70,7 @@ function App() {
         <Route path="/" Component={Homepage} />
         <Route path="/dokumen-p3m" Component={DokumenP3M} />
         <Route path="/tentang" Component={Tentang} />
-        <Route path="/pimpinan-lembaga" Component={PimpinanLembaga} />
+
         <Route path="/struktur-organisasi" Component={StrukturOrganisasi} />
         <Route path="/panduan-penelitian" Component={PanduanPenelitian} />
         <Route path="/dokumen-penelitian" Component={DokumenPenelitian} />
