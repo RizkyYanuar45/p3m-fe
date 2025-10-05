@@ -5,6 +5,7 @@ import Homepage from "./pages/Homepage";
 import Tentang from "./pages/Tentang";
 
 import PanduanPenelitian from "./pages/PanduanPenelitian";
+import PanduanPengelolaanJurnalIlmiah from "./pages/PanduanPengelolaanJurnalIlmiah";
 import PanduanPengabdianKepadaMasyarakat from "./pages/PanduanPengabdianKepadaMasyarakat";
 import ProgramPanduanPengabdianMasyarakatMandiri from "./pages/ProgramPanduanPengabdianMasyarakatMandiri";
 import InformasiPengabdianKepadaMasyarakat from "./pages/InformasiPengabdianKepadaMasyarakat";
@@ -15,6 +16,7 @@ import AllInformasiPengabdianKepadaMasyarakat from "./pages/AllInformasiPengabdi
 import AllInformasiPenelitian from "./pages/AllInformasiPenelitian";
 import LuaranP3M from "./pages/LuaranP3M";
 import BukuPanduanKKNPMM from "./pages/BukuPanduanKKNPMM";
+import BukuPanduanKKNPKNBEM from "./pages/BukuPanduanKKNPKNBEM";
 import SKKKNTematikUNIM from "./pages/SKKKNTematikUNIM";
 import SKKKNPMMUNIM from "./pages/SKKKNPMMUNIM";
 import ProgramKKNUNIM from "./pages/ProgramKKNUNIM";
@@ -70,6 +72,10 @@ function App() {
         <Route path="/" Component={Homepage} />
         <Route path="/dokumen-p3m" Component={DokumenP3M} />
         <Route path="/tentang" Component={Tentang} />
+        <Route
+          path="/panduan-pengelolaan-jurnal-ilmiah"
+          Component={PanduanPengelolaanJurnalIlmiah}
+        />
 
         <Route path="/struktur-organisasi" Component={StrukturOrganisasi} />
         <Route path="/panduan-penelitian" Component={PanduanPenelitian} />
@@ -110,6 +116,10 @@ function App() {
         />
 
         <Route path="/buku-panduan-kkn-pmm" Component={BukuPanduanKKNPMM} />
+        <Route
+          path="/buku-panduan-kkn-pkn-bem"
+          Component={BukuPanduanKKNPKNBEM}
+        />
 
         {/* akhir sub menu kkn */}
         <Route path="/article/:slug" Component={ArticlePage} />

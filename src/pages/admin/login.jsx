@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [name, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -22,7 +22,7 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email,
+          name,
           password,
         }),
         credentials: "include", // PENTING: agar browser mengirim dan menerima cookie
@@ -142,11 +142,11 @@ const Login = () => {
                 fontWeight: 500,
               }}
             >
-              Email
+              Username
             </label>
             <input
-              type="email"
-              value={email}
+              type="text"
+              value={name}
               onChange={(e) => setEmail(e.target.value)}
               style={{
                 width: "100%",

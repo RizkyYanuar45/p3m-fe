@@ -47,8 +47,8 @@ export default function HubungiKami() {
                 <tr>
                   <td>📍 Alamat</td>
                   <td>
-                    Tambak Rejo, Gayaman, Kec. Mojoanyar, Kabupaten Mojokerto,
-                    Jawa Timur 61364
+                    Tambak Rejo, Gayaman KM 7, Kec. Mojoanyar, Kabupaten
+                    Mojokerto, Jawa Timur 61364
                   </td>
                 </tr>
                 <tr>

@@ -3,29 +3,26 @@ import CrudPimpinanLembaga from "./CrudPimpinanLembaga";
 import CrudPanduanPenelitian from "./CrudPanduanPenelitian";
 import CrudDokumenP3M from "./CrudDokumenP3M";
 import CrudLuaranP3M from "./CrudLuaranP3M";
-
 import CrudSKKKNPMM from "./CrudSKKKNPMM";
 import CrudProgramPanduanPengabdianMasyarakat from "./CrudProgramPanduanPengabdianMasyarakat";
 import CrudSKRektor from "./CrudSKRektor";
 import CrudPanduanPengabdianMasyarakat from "./CrudPanduanPengabdianMasyarakat";
+import CrudPanduanPengelolaanJurnalIlmiah from "./CrudPanduanPengelolaanJurnalIlmiah";
 import CrudDokumenPenelitian from "./CrudDokumenPenelitian";
 import CrudProgramPengabdianMasyarakat from "./CrudProgramPengabdianMasyarakat";
-// Placeholder imports for new submenus (replace with actual components if available)
 import CrudInformasiPengabdian from "./CrudInformasiPengabdian";
 import CrudSKPengabdian from "./CrudSKPengabdian";
 import CrudDokumenPengabdian from "./CrudDokumenPengabdian";
-
 import CrudInformasiPenelitian from "./CrudInformasiPenelitian";
 import CrudProgramPanduanPengabdianMasyarakatMandiri from "./CrudProgramPanduanPengabdianMasyarakatMandiri";
 import CrudStrukturOrganisasi from "./CrudStrukturOrganisasi";
-
 import CrudInformasiKKN from "./CrudInformasiKKN";
-
 import CrudJurnalLayananMasyarakat from "./CrudJurnalLayananMasyarakat";
 import CrudKuisioner from "./CrudKuisioner";
 import CrudProgramKKNUnim from "./CrudProgramKKNUnim";
 import CrudBukuPanduanKKNPMM from "./CrudBukuPanduanKKNPMM";
 import CrudBukuPanduanKKNTematik from "./CrudBukuPanduanKKNTematik";
+import CrudBukuPanduanKKNPKNBEM from "./CrudBukuPanduanKKNPKNBEM";
 import CrudSKKKNTematik from "./CrudSKKKNTematik";
 
 // Struktur menuList yang benar
@@ -120,31 +117,34 @@ const menuList = [
         component: <CrudBukuPanduanKKNTematik />,
       },
       {
-        key: "skKKNTematik",
-        label: "SK KKN Tematik UNIM",
-        component: <CrudSKKKNTematik />,
+        key: "bukupanduankknpknbem",
+        label: "Buku Panduan KKN PKN BEM",
+        component: <CrudBukuPanduanKKNPKNBEM />,
       },
       {
         key: "bukupanduankknpmm",
         label: "Buku Panduan KKN PMM",
         component: <CrudBukuPanduanKKNPMM />,
       },
-      {
-        key: "skKKNPMM",
-        label: "SK KKN PMM UNIM",
-        component: <CrudSKKKNPMM />,
-      },
     ],
+  },
+  {
+    key: "PanduanPengelolaanJurnalIlmiah",
+    label: "Panduan Pengelolaan Jurnal Ilmiah",
+    component: <CrudPanduanPengelolaanJurnalIlmiah />,
   },
 ];
 
 const DashboardAdmin = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(menuList[0].key);
-  const [activeSubmenu, setActiveSubmenu] = useState(
-    menuList[0].submenus[0].key
-  );
-  const [openDropdown, setOpenDropdown] = useState(null);
+
+  const [activeSubmenu, setActiveSubmenu] = useState(() => {
+    const firstMenu = menuList[0];
+    return firstMenu.submenus ? firstMenu.submenus[0].key : null;
+  });
+
+  const [openDropdown, setOpenDropdown] = useState(menuList[0].key);
 
   const handleLogout = () => {
     sessionStorage.removeItem("isLoggedIn");
@@ -152,9 +152,26 @@ const DashboardAdmin = () => {
   };
 
   const currentMenu = menuList.find((m) => m.key === activeMenu);
-  const currentSubmenu = currentMenu?.submenus.find(
+  const currentSubmenu = currentMenu?.submenus?.find(
     (s) => s.key === activeSubmenu
   );
+
+  const handleMenuClick = (menu) => {
+    setActiveMenu(menu.key);
+    if (menu.submenus && menu.submenus.length > 0) {
+      setActiveSubmenu(menu.submenus[0].key);
+      setOpenDropdown(openDropdown === menu.key ? null : menu.key);
+    } else {
+      setActiveSubmenu(null);
+      setOpenDropdown(null);
+      if (window.innerWidth <= 600) setSidebarOpen(false);
+    }
+  };
+
+  const handleSubmenuClick = (submenu) => {
+    setActiveSubmenu(submenu.key);
+    if (window.innerWidth <= 600) setSidebarOpen(false);
+  };
 
   return (
     <>
@@ -173,9 +190,11 @@ const DashboardAdmin = () => {
           .dashboard-sidebar.open { transform: translateX(0); }
           .dashboard-content { padding: 8px !important; }
           .dashboard-topbar { font-size: 16px !important; padding: 12px 8px 8px 8px !important; }
-          .dashboard-hamburger { display: block !important; position: fixed; right: 16px; top: 16px; z-index: 1100; background: #ffb300; border: none; border-radius: 4px; width: 40px; height: 40px; justify-content: center; align-items: center; }
+          .dashboard-hamburger { display: flex !important; }
+          .dashboard-close-sidebar { display: block !important; }
         }
         .dashboard-hamburger { display: none; }
+        .dashboard-close-sidebar { display: none; }
       `}</style>
       <div
         className="dashboard-admin"
@@ -187,15 +206,13 @@ const DashboardAdmin = () => {
           overflowX: "auto",
         }}
       >
-        {/* Hamburger menu for mobile */}
         <button
           className="dashboard-hamburger"
           onClick={() => setSidebarOpen(!sidebarOpen)}
           style={{
-            right: 16,
-            left: "unset",
-            top: 16,
             position: "fixed",
+            right: 16,
+            top: 16,
             zIndex: 1100,
             background: "#ffb300",
             border: "none",
@@ -204,12 +221,10 @@ const DashboardAdmin = () => {
             height: 40,
             justifyContent: "center",
             alignItems: "center",
-            display: window.innerWidth <= 600 ? "flex" : "none",
           }}
         >
           <span style={{ fontSize: 28, color: "#222d32" }}>&#9776;</span>
         </button>
-        {/* Overlay for mobile sidebar */}
         {sidebarOpen && (
           <div
             style={{
@@ -224,7 +239,6 @@ const DashboardAdmin = () => {
             onClick={() => setSidebarOpen(false)}
           ></div>
         )}
-        {/* Sidebar */}
         <div
           className={`dashboard-sidebar${sidebarOpen ? " open" : ""}`}
           style={{
@@ -239,10 +253,9 @@ const DashboardAdmin = () => {
             maxWidth: "100vw",
           }}
         >
-          {/* Close button for mobile sidebar */}
           <button
+            className="dashboard-close-sidebar"
             style={{
-              display: "none",
               position: "absolute",
               right: 16,
               top: 16,
@@ -252,8 +265,12 @@ const DashboardAdmin = () => {
               borderRadius: 4,
               fontSize: 24,
               zIndex: 1101,
+              width: 32,
+              height: 32,
+              lineHeight: "32px",
+              textAlign: "center",
+              padding: 0,
             }}
-            className="dashboard-close-sidebar"
             onClick={() => setSidebarOpen(false)}
           >
             &times;
@@ -273,129 +290,84 @@ const DashboardAdmin = () => {
             Admin P3M UNIM
           </div>
           <div style={{ flex: 1, marginTop: 16 }}>
-            {menuList.map((menu) => {
-              // Tambahkan 'kuisioner' sebagai dropdown
-              const isDropdown =
-                menu.key === "profil" ||
-                menu.key === "panduan" ||
-                menu.key === "program" ||
-                menu.key === "kkn" ||
-                menu.key === "kuisioner";
-              return (
-                <div key={menu.key}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "14px 32px",
-                      background:
-                        activeMenu === menu.key ? "#ffb300" : "transparent",
-                      color: activeMenu === menu.key ? "#222d32" : "#b8c7ce",
-                      fontWeight: 700,
-                      fontSize: 17,
-                      cursor: "pointer",
-                      borderLeft:
-                        activeMenu === menu.key
-                          ? "4px solid #1976d2"
-                          : "4px solid transparent",
-                      borderBottom: "1px solid #232a2f",
-                      transition: "background 0.2s",
-                    }}
-                  >
-                    <span
-                      onClick={() => {
-                        setActiveMenu(menu.key);
-                        setActiveSubmenu(menu.submenus[0].key);
-                        if (isDropdown)
-                          setOpenDropdown(
-                            openDropdown === menu.key ? null : menu.key
-                          );
-                        // Tutup sidebar jika di mobile untuk menu tanpa dropdown
-                        if (
-                          (menu.key === "pimpinanLembaga" ||
-                            menu.key === "jurnalLayananMasyarakat") &&
-                          window.innerWidth <= 600
-                        )
-                          setSidebarOpen(false);
+            {menuList.map((menu) => (
+              <div key={menu.key}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "14px 32px",
+                    background:
+                      activeMenu === menu.key ? "#ffb300" : "transparent",
+                    color: activeMenu === menu.key ? "#222d32" : "#b8c7ce",
+                    fontWeight: 700,
+                    fontSize: 17,
+                    cursor: "pointer",
+                    borderLeft:
+                      activeMenu === menu.key
+                        ? "4px solid #1976d2"
+                        : "4px solid transparent",
+                    borderBottom: "1px solid #232a2f",
+                    transition: "background 0.2s",
+                  }}
+                  onClick={() => handleMenuClick(menu)}
+                >
+                  <span style={{ flex: 1 }}>{menu.label}</span>
+                  {menu.submenus && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenDropdown(
+                          openDropdown === menu.key ? null : menu.key
+                        );
                       }}
-                      style={{ flex: 1 }}
+                      style={{
+                        marginLeft: 8,
+                        background: "none",
+                        border: "none",
+                        color: activeMenu === menu.key ? "#222d32" : "#b8c7ce",
+                        fontSize: 18,
+                        cursor: "pointer",
+                        outline: "none",
+                        padding: 0,
+                        userSelect: "none",
+                        transition: "color 0.2s",
+                      }}
                     >
-                      {menu.label}
-                    </span>
-                    {isDropdown && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenDropdown(
-                            openDropdown === menu.key ? null : menu.key
-                          );
-                          setActiveMenu(menu.key);
-                          setActiveSubmenu(menu.submenus[0].key);
-                        }}
-                        style={{
-                          marginLeft: 8,
-                          background: "none",
-                          border: "none",
-                          color:
-                            activeMenu === menu.key ? "#222d32" : "#b8c7ce",
-                          fontSize: 18,
-                          cursor: "pointer",
-                          outline: "none",
-                          padding: 0,
-                          userSelect: "none",
-                          transition: "color 0.2s",
-                        }}
-                        aria-label={
-                          openDropdown === menu.key
-                            ? "Tutup submenu"
-                            : "Buka submenu"
-                        }
-                      >
-                        {openDropdown === menu.key ? "▲" : "▼"}
-                      </button>
-                    )}
-                  </div>
-                  {/* Submenu tampil hanya jika dropdown terbuka (untuk panduan/program/kuisioner/kkn), atau menu aktif dan bukan dropdown */}
-                  {menu.submenus.length > 1 &&
-                    ((isDropdown && openDropdown === menu.key) ||
-                      (!isDropdown && activeMenu === menu.key)) && (
-                      <div style={{ background: "#263238", paddingLeft: 0 }}>
-                        {menu.submenus.map((submenu) => (
-                          <div
-                            key={submenu.key}
-                            onClick={() => {
-                              setActiveSubmenu(submenu.key);
-                              // Tutup sidebar jika di mobile
-                              if (window.innerWidth <= 600)
-                                setSidebarOpen(false);
-                            }}
-                            style={{
-                              padding: "10px 48px",
-                              background:
-                                activeSubmenu === submenu.key
-                                  ? "#1976d2"
-                                  : "transparent",
-                              color:
-                                activeSubmenu === submenu.key
-                                  ? "#fff"
-                                  : "#b8c7ce",
-                              cursor: "pointer",
-                              fontWeight: 500,
-                              fontSize: 15,
-                              borderLeft:
-                                activeSubmenu === submenu.key
-                                  ? "3px solid #ffb300"
-                                  : "3px solid transparent",
-                            }}
-                          >
-                            {submenu.label}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                      {openDropdown === menu.key ? "▲" : "▼"}
+                    </button>
+                  )}
                 </div>
-              );
-            })}
+                {menu.submenus && openDropdown === menu.key && (
+                  <div style={{ background: "#263238", paddingLeft: 0 }}>
+                    {menu.submenus.map((submenu) => (
+                      <div
+                        key={submenu.key}
+                        onClick={() => handleSubmenuClick(submenu)}
+                        style={{
+                          padding: "10px 48px",
+                          background:
+                            activeSubmenu === submenu.key
+                              ? "#1976d2"
+                              : "transparent",
+                          color:
+                            activeSubmenu === submenu.key ? "#fff" : "#b8c7ce",
+                          cursor: "pointer",
+                          fontWeight: 500,
+                          fontSize: 15,
+                          borderLeft:
+                            activeSubmenu === submenu.key
+                              ? "3px solid #ffb300"
+                              : "3px solid transparent",
+                        }}
+                      >
+                        {submenu.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
           <div
             style={{
@@ -424,7 +396,6 @@ const DashboardAdmin = () => {
             </button>
           </div>
         </div>
-        {/* Main Content */}
         <div
           style={{
             flex: 1,
@@ -435,7 +406,6 @@ const DashboardAdmin = () => {
             minWidth: "320px",
           }}
         >
-          {/* Topbar/Header */}
           <div
             className="dashboard-topbar"
             style={{
@@ -448,14 +418,12 @@ const DashboardAdmin = () => {
               letterSpacing: 2,
             }}
           >
-            {currentMenu?.label}{" "}
-            {currentSubmenu && currentMenu.submenus.length > 1
-              ? " - " + currentSubmenu.label
-              : ""}
+            {currentSubmenu ? currentSubmenu.label : currentMenu?.label}
           </div>
-          {/* Content */}
           <div style={{ flex: 1, padding: 32, minHeight: 400 }}>
-            {currentSubmenu?.component}
+            {currentMenu?.submenus
+              ? currentSubmenu?.component
+              : currentMenu?.component}
           </div>
         </div>
       </div>

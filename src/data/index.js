@@ -78,19 +78,37 @@ export const navLinks = [
       },
 
       {
-        id: 5,
+        id: 4,
         path: "buku-panduan-kkn-pmm",
         text: "Buku Panduan KKN PMM",
+      },
+      {
+        id: 5,
+        path: "buku-panduan-kkn-pkn-bem",
+        text: "Buku Panduan KKN PKN BEM",
       },
     ],
   },
   {
     id: 6,
+    path: "",
+    text: "Layanan HKI",
+    subMenu: [
+      {
+        id: 1,
+        path: "/panduan-pengelolaan-jurnal-ilmiah",
+        text: "Panduan Pengelolaan Jurnal Ilmiah",
+      },
+      { id: 2, path: "", text: "Link OJS Jurnal" },
+    ],
+  },
+  {
+    id: 7,
     path: "https://ejurnal.unim.ac.id/index.php",
     text: "E-Jurnal",
   },
   {
-    id: 7,
+    id: 8,
     path: "",
     text: "Kuisioner/Komplain",
     subMenu: [
@@ -111,7 +129,7 @@ export const navLinks = [
       },
       {
         id: 4,
-        path: "https://forms.gle/https://forms.gle/bihQBd1qJmd5HEVY8",
+        path: "https://forms.gle/bihQBd1qJmd5HEVY8",
         text: "Survey Kepuasan Mitra KKN",
       },
     ],

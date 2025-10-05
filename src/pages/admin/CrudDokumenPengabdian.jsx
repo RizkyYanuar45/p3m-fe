@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -13,54 +13,70 @@ const CrudDokumenPengabdian = () => {
   const [docForm, setDocForm] = useState({
     file_name: "",
     file_url: "",
-    catdokumenpengabId: "",
+    catdokumenpenId: "",
   });
   const [editDocId, setEditDocId] = useState(null);
 
   const [categoryForm, setCategoryForm] = useState({ name: "" });
   const [editCategoryId, setEditCategoryId] = useState(null);
 
-  useEffect(() => {
-    const fetchAllData = async () => {
-      setLoading(true);
-      setError("");
-      try {
-        const [catResponse, docResponse] = await Promise.all([
-          fetch(`${api}/catdokumenpengab`),
-          fetch(`${api}/dokumenpengab`),
-        ]);
+  // --- PAGINATION STATE ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  // -------------------------
 
-        if (!catResponse.ok || !docResponse.ok) {
-          throw new Error("Gagal memuat data awal dari server.");
-        }
+  const fetchAllData = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const [catResponse, docResponse] = await Promise.all([
+        fetch(`${api}/catdokumenpen`),
+        fetch(`${api}/dokumenpen`),
+      ]);
 
-        const catData = await catResponse.json();
-        const docData = await docResponse.json();
-
-        setCategories(catData);
-        setDocuments(docData);
-        if (catData.length > 0) {
-          setSelectedCategory(catData[0].id);
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      if (!catResponse.ok || !docResponse.ok) {
+        throw new Error("Gagal memuat data dari server.");
       }
-    };
+
+      const catData = await catResponse.json();
+      const docData = await docResponse.json();
+
+      setCategories(catData);
+      setDocuments(docData);
+
+      const currentCategoryExists = catData.some(
+        (cat) => cat.id === selectedCategory
+      );
+      if (!currentCategoryExists && catData.length > 0) {
+        setSelectedCategory(catData[0].id);
+      } else if (catData.length === 0) {
+        setSelectedCategory("");
+      } else if (!selectedCategory && catData.length > 0) {
+        setSelectedCategory(catData[0].id);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [api, selectedCategory]);
+
+  useEffect(() => {
     fetchAllData();
-  }, [api]);
+  }, [fetchAllData]);
+
+  // Reset page to 1 when the category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory]);
 
   const handleCategorySubmit = async (e) => {
     e.preventDefault();
     setError("");
-
-    let url = `${api}/catdokumenpengab/add`;
-    let method = "POST";
-    if (editCategoryId) {
-      url = `${api}/catdokumenpengab/update/${editCategoryId}`;
-      method = "PATCH";
-    }
+    const url = editCategoryId
+      ? `${api}/catdokumenpen/update/${editCategoryId}`
+      : `${api}/catdokumenpen/add`;
+    const method = editCategoryId ? "PATCH" : "POST";
 
     try {
       const response = await fetch(url, {
@@ -69,22 +85,13 @@ const CrudDokumenPengabdian = () => {
         body: JSON.stringify({ name: categoryForm.name }),
         credentials: "include",
       });
-      const responseData = await response.json();
       if (!response.ok) {
+        const responseData = await response.json();
         throw new Error(responseData.message || "Gagal menyimpan kategori.");
       }
-
-      if (editCategoryId) {
-        setCategories(
-          categories.map((cat) =>
-            cat.id === editCategoryId ? responseData : cat
-          )
-        );
-        setEditCategoryId(null);
-      } else {
-        setCategories([...categories, responseData]);
-      }
+      await fetchAllData();
       setCategoryForm({ name: "" });
+      setEditCategoryId(null);
     } catch (err) {
       setError(err.message);
     }
@@ -96,9 +103,11 @@ const CrudDokumenPengabdian = () => {
   };
 
   const handleCategoryDelete = async (id) => {
-    if (window.confirm("Yakin ingin menghapus kategori?")) {
+    if (
+      window.confirm("Yakin ingin menghapus kategori beserta semua isinya?")
+    ) {
       try {
-        const response = await fetch(`${api}/catdokumenpengab/delete/${id}`, {
+        const response = await fetch(`${api}/catdokumenpen/delete/${id}`, {
           method: "DELETE",
           credentials: "include",
         });
@@ -106,8 +115,7 @@ const CrudDokumenPengabdian = () => {
           const errorData = await response.json();
           throw new Error(errorData.message || "Gagal menghapus kategori.");
         }
-        setCategories(categories.filter((cat) => cat.id !== id));
-        setDocuments(documents.filter((doc) => doc.catdokumenpengabId !== id));
+        await fetchAllData();
       } catch (err) {
         setError(err.message);
       }
@@ -117,16 +125,14 @@ const CrudDokumenPengabdian = () => {
   const handleDocumentSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
-    let url = `${api}/dokumenpengab/add`;
-    let method = "POST";
-    let body = { ...docForm, catdokumenpengabId: selectedCategory };
-
-    if (editDocId) {
-      url = `${api}/dokumenpengab/update/${editDocId}`;
-      method = "PATCH";
-      body = docForm;
-    }
+    const isEditMode = !!editDocId;
+    const url = isEditMode
+      ? `${api}/dokumenpen/update/${editDocId}`
+      : `${api}/dokumenpen/add`;
+    const method = isEditMode ? "PATCH" : "POST";
+    const body = isEditMode
+      ? { ...docForm }
+      : { ...docForm, catdokumenpenId: selectedCategory };
 
     try {
       const response = await fetch(url, {
@@ -135,20 +141,13 @@ const CrudDokumenPengabdian = () => {
         body: JSON.stringify(body),
         credentials: "include",
       });
-      const responseData = await response.json();
       if (!response.ok) {
+        const responseData = await response.json();
         throw new Error(responseData.message || "Gagal menyimpan dokumen.");
       }
-
-      if (editDocId) {
-        setDocuments(
-          documents.map((doc) => (doc.id === editDocId ? responseData : doc))
-        );
-        setEditDocId(null);
-      } else {
-        setDocuments([...documents, responseData]);
-      }
-      setDocForm({ file_name: "", file_url: "", catdokumenpengabId: "" });
+      await fetchAllData();
+      setDocForm({ file_name: "", file_url: "", catdokumenpenId: "" });
+      setEditDocId(null);
     } catch (err) {
       setError(err.message);
     }
@@ -159,14 +158,14 @@ const CrudDokumenPengabdian = () => {
     setDocForm({
       file_name: doc.file_name,
       file_url: doc.file_url,
-      catdokumenpengabId: doc.catdokumenpengabId,
+      catdokumenpenId: doc.catdokumenpenId,
     });
   };
 
   const handleDocumentDelete = async (id) => {
     if (window.confirm("Yakin ingin menghapus dokumen ini?")) {
       try {
-        const response = await fetch(`${api}/dokumenpengab/delete/${id}`, {
+        const response = await fetch(`${api}/dokumenpen/delete/${id}`, {
           method: "DELETE",
           credentials: "include",
         });
@@ -174,7 +173,7 @@ const CrudDokumenPengabdian = () => {
           const errorData = await response.json();
           throw new Error(errorData.message || "Gagal menghapus dokumen.");
         }
-        setDocuments(documents.filter((doc) => doc.id !== id));
+        await fetchAllData();
       } catch (err) {
         setError(err.message);
       }
@@ -183,12 +182,22 @@ const CrudDokumenPengabdian = () => {
 
   const handleCancelEdit = () => {
     setEditDocId(null);
-    setDocForm({ file_name: "", file_url: "", catdokumenpengabId: "" });
+    setDocForm({ file_name: "", file_url: "", catdokumenpenId: "" });
   };
 
   const filteredDocuments = documents.filter(
-    (doc) => doc.catdokumenpengabId === selectedCategory
+    (doc) => doc.catdokumenpenId === selectedCategory
   );
+
+  const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentDocuments = filteredDocuments.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div style={{ padding: "20px" }}>
@@ -197,7 +206,6 @@ const CrudDokumenPengabdian = () => {
         <p>Memuat data...</p>
       ) : (
         <>
-          {/* --- CRUD KATEGORI --- */}
           <div
             style={{
               background: "#e3f2fd",
@@ -206,7 +214,7 @@ const CrudDokumenPengabdian = () => {
               marginBottom: 24,
             }}
           >
-            <h3>Kelola Kategori Dokumen Pengabdian</h3>
+            <h3>Kelola Kategori Dokumen</h3>
             <form onSubmit={handleCategorySubmit} style={{ marginBottom: 16 }}>
               <input
                 placeholder="Nama Kategori"
@@ -253,10 +261,7 @@ const CrudDokumenPengabdian = () => {
               </tbody>
             </table>
           </div>
-
           <hr style={{ margin: "40px 0" }} />
-
-          {/* --- CRUD DOKUMEN --- */}
           <h3>Dokumen Pengabdian</h3>
           <div style={{ marginBottom: 16 }}>
             <label>Pilih Kategori:&nbsp;</label>
@@ -293,11 +298,11 @@ const CrudDokumenPengabdian = () => {
               <div style={{ marginTop: "10px" }}>
                 <label>Pindahkan ke Kategori:&nbsp;</label>
                 <select
-                  value={docForm.catdokumenpengabId}
+                  value={docForm.catdokumenpenId}
                   onChange={(e) =>
                     setDocForm({
                       ...docForm,
-                      catdokumenpengabId: Number(e.target.value),
+                      catdokumenpenId: Number(e.target.value),
                     })
                   }
                 >
@@ -328,10 +333,10 @@ const CrudDokumenPengabdian = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredDocuments.length > 0 ? (
-                filteredDocuments.map((doc, idx) => (
+              {currentDocuments.length > 0 ? (
+                currentDocuments.map((doc, idx) => (
                   <tr key={doc.id}>
-                    <td>{idx + 1}</td>
+                    <td>{indexOfFirstItem + idx + 1}</td>
                     <td>{doc.file_name}</td>
                     <td>
                       <a
@@ -361,6 +366,49 @@ const CrudDokumenPengabdian = () => {
               )}
             </tbody>
           </table>
+
+          {totalPages > 1 && (
+            <div
+              style={{
+                marginTop: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "5px",
+              }}
+            >
+              <button
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                &laquo; Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    style={{
+                      fontWeight: currentPage === number ? "bold" : "normal",
+                      backgroundColor:
+                        currentPage === number ? "#e0e0e0" : "white",
+                      padding: "5px 10px",
+                      border: "1px solid #ccc",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button
+                onClick={() => paginate(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next &raquo;
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

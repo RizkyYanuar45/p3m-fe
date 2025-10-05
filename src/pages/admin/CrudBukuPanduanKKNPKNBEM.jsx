@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 const initialForm = { file_name: "", file_description: "", file_url: "" };
 const api = import.meta.env.VITE_API_URL;
 
-const CrudBukuPanduanKKNTematik = () => {
+const CrudBukuPanduanKKNPKNBEM = () => {
   const [panduanPenelitian, setPanduanPenelitian] = useState([]);
   const [form, setForm] = useState(initialForm);
   const [editId, setEditId] = useState(null);
@@ -21,7 +21,7 @@ const CrudBukuPanduanKKNTematik = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `${api}/files/type?type=panduan_kkn_tematik`
+          `${api}/files/type?type=panduan_kkn_pkn_bem`
         );
         if (!response.ok) {
           throw new Error("Gagal mengambil data dari server.");
@@ -70,7 +70,7 @@ const CrudBukuPanduanKKNTematik = () => {
       }
     } else {
       // Logika TAMBAH (POST) dengan fetch
-      const dataToSend = { ...form, file_type: "panduan_kkn_tematik" };
+      const dataToSend = { ...form, file_type: "panduan_kkn_pkn_bem" };
       try {
         const response = await fetch(`${api}/files/add`, {
           method: "POST",
@@ -152,7 +152,7 @@ const CrudBukuPanduanKKNTematik = () => {
 
   return (
     <div>
-      <h3>Buku Panduan KKN Tematik</h3>
+      <h3>Buku Panduan KKN PKN BEM</h3>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form
         onSubmit={handleSubmit}
@@ -258,11 +258,7 @@ const CrudBukuPanduanKKNTematik = () => {
                     onClick={() => paginate(number)}
                     style={{
                       fontWeight: currentPage === number ? "bold" : "normal",
-                      padding: "5px 10px",
-                      cursor: "pointer",
-                      border: "1px solid #ccc",
-                      backgroundColor:
-                        currentPage === number ? "#e0e0e0" : "white",
+                      background: currentPage === number ? "#ddd" : "white",
                     }}
                   >
                     {number}
@@ -284,4 +280,4 @@ const CrudBukuPanduanKKNTematik = () => {
   );
 };
 
-export default CrudBukuPanduanKKNTematik;
+export default CrudBukuPanduanKKNPKNBEM;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -13,54 +13,70 @@ const CrudDokumenP3M = () => {
   const [docForm, setDocForm] = useState({
     file_name: "",
     file_url: "",
-    catdokumenprofId: "", // Diubah agar konsisten
+    catdokumenprofId: "",
   });
   const [editDocId, setEditDocId] = useState(null);
 
   const [categoryForm, setCategoryForm] = useState({ name: "" });
   const [editCategoryId, setEditCategoryId] = useState(null);
 
-  useEffect(() => {
-    const fetchAllData = async () => {
-      setLoading(true);
-      setError("");
-      try {
-        const [catResponse, docResponse] = await Promise.all([
-          fetch(`${api}/catdokumenprof`),
-          fetch(`${api}/dokumenprof`),
-        ]);
+  // --- PAGINATION STATE ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  // -------------------------
 
-        if (!catResponse.ok || !docResponse.ok) {
-          throw new Error("Gagal memuat data awal dari server.");
-        }
+  const fetchAllData = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const [catResponse, docResponse] = await Promise.all([
+        fetch(`${api}/catdokumenprof`),
+        fetch(`${api}/dokumenprof`),
+      ]);
 
-        const catData = await catResponse.json();
-        const docData = await docResponse.json();
-
-        setCategories(catData);
-        setDocuments(docData);
-        if (catData.length > 0) {
-          setSelectedCategory(catData[0].id);
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      if (!catResponse.ok || !docResponse.ok) {
+        throw new Error("Gagal memuat data dari server.");
       }
-    };
+
+      const catData = await catResponse.json();
+      const docData = await docResponse.json();
+
+      setCategories(catData);
+      setDocuments(docData);
+
+      const currentCategoryExists = catData.some(
+        (cat) => cat.id === selectedCategory
+      );
+      if (!currentCategoryExists && catData.length > 0) {
+        setSelectedCategory(catData[0].id);
+      } else if (catData.length === 0) {
+        setSelectedCategory("");
+      } else if (!selectedCategory && catData.length > 0) {
+        setSelectedCategory(catData[0].id);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [api, selectedCategory]);
+
+  useEffect(() => {
     fetchAllData();
-  }, [api]);
+  }, [fetchAllData]);
+
+  // Reset page to 1 when the category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory]);
 
   const handleCategorySubmit = async (e) => {
     e.preventDefault();
     setError("");
-
-    let url = `${api}/catdokumenprof/add`;
-    let method = "POST";
-    if (editCategoryId) {
-      url = `${api}/catdokumenprof/update/${editCategoryId}`;
-      method = "PATCH";
-    }
+    const url = editCategoryId
+      ? `${api}/catdokumenprof/update/${editCategoryId}`
+      : `${api}/catdokumenprof/add`;
+    const method = editCategoryId ? "PATCH" : "POST";
 
     try {
       const response = await fetch(url, {
@@ -69,22 +85,13 @@ const CrudDokumenP3M = () => {
         body: JSON.stringify({ name: categoryForm.name }),
         credentials: "include",
       });
-      const responseData = await response.json();
       if (!response.ok) {
+        const responseData = await response.json();
         throw new Error(responseData.message || "Gagal menyimpan kategori.");
       }
-
-      if (editCategoryId) {
-        setCategories(
-          categories.map((cat) =>
-            cat.id === editCategoryId ? responseData : cat
-          )
-        );
-        setEditCategoryId(null);
-      } else {
-        setCategories([...categories, responseData]);
-      }
+      await fetchAllData();
       setCategoryForm({ name: "" });
+      setEditCategoryId(null);
     } catch (err) {
       setError(err.message);
     }
@@ -108,17 +115,7 @@ const CrudDokumenP3M = () => {
           const errorData = await response.json();
           throw new Error(errorData.message || "Gagal menghapus kategori.");
         }
-        // Hapus kategori dari state
-        const newCategories = categories.filter((cat) => cat.id !== id);
-        setCategories(newCategories);
-
-        // Hapus dokumen yang terkait dari state
-        setDocuments(documents.filter((doc) => doc.catdokumenprofId !== id));
-
-        // Jika kategori yang dipilih adalah yang dihapus, reset pilihan
-        if (selectedCategory === id) {
-          setSelectedCategory(newCategories[0]?.id || "");
-        }
+        await fetchAllData();
       } catch (err) {
         setError(err.message);
       }
@@ -128,25 +125,14 @@ const CrudDokumenP3M = () => {
   const handleDocumentSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
-    // Menentukan URL dan metode berdasarkan mode (edit atau tambah)
     const isEditMode = !!editDocId;
     const url = isEditMode
       ? `${api}/dokumenprof/update/${editDocId}`
       : `${api}/dokumenprof/add`;
     const method = isEditMode ? "PATCH" : "POST";
-
-    // Siapkan body request
-    let body = {};
-    if (isEditMode) {
-      body = {
-        file_name: docForm.file_name,
-        file_url: docForm.file_url,
-        catdokumenprofId: docForm.catdokumenprofId, // Kirim ID kategori baru saat update
-      };
-    } else {
-      body = { ...docForm, catdokumenprofId: selectedCategory };
-    }
+    const body = isEditMode
+      ? { ...docForm }
+      : { ...docForm, catdokumenprofId: selectedCategory };
 
     try {
       const response = await fetch(url, {
@@ -155,20 +141,13 @@ const CrudDokumenP3M = () => {
         body: JSON.stringify(body),
         credentials: "include",
       });
-      const responseData = await response.json();
       if (!response.ok) {
+        const responseData = await response.json();
         throw new Error(responseData.message || "Gagal menyimpan dokumen.");
       }
-
-      if (isEditMode) {
-        setDocuments(
-          documents.map((doc) => (doc.id === editDocId ? responseData : doc))
-        );
-        setEditDocId(null);
-      } else {
-        setDocuments([...documents, responseData]);
-      }
+      await fetchAllData();
       setDocForm({ file_name: "", file_url: "", catdokumenprofId: "" });
+      setEditDocId(null);
     } catch (err) {
       setError(err.message);
     }
@@ -194,7 +173,7 @@ const CrudDokumenP3M = () => {
           const errorData = await response.json();
           throw new Error(errorData.message || "Gagal menghapus dokumen.");
         }
-        setDocuments(documents.filter((doc) => doc.id !== id));
+        await fetchAllData();
       } catch (err) {
         setError(err.message);
       }
@@ -210,6 +189,16 @@ const CrudDokumenP3M = () => {
     (doc) => doc.catdokumenprofId === selectedCategory
   );
 
+  const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentDocuments = filteredDocuments.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div style={{ padding: "20px" }}>
       {error && <p style={{ color: "red" }}>{error}</p>}
@@ -217,7 +206,6 @@ const CrudDokumenP3M = () => {
         <p>Memuat data...</p>
       ) : (
         <>
-          {/* --- CRUD KATEGORI --- */}
           <div
             style={{
               background: "#e3f2fd",
@@ -276,7 +264,6 @@ const CrudDokumenP3M = () => {
 
           <hr style={{ margin: "40px 0" }} />
 
-          {/* --- CRUD DOKUMEN --- */}
           <h3>Dokumen P3M</h3>
           <div style={{ marginBottom: 16 }}>
             <label>Pilih Kategori:&nbsp;</label>
@@ -348,10 +335,10 @@ const CrudDokumenP3M = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredDocuments.length > 0 ? (
-                filteredDocuments.map((doc, idx) => (
+              {currentDocuments.length > 0 ? (
+                currentDocuments.map((doc, idx) => (
                   <tr key={doc.id}>
-                    <td>{idx + 1}</td>
+                    <td>{indexOfFirstItem + idx + 1}</td>
                     <td>{doc.file_name}</td>
                     <td>
                       <a
@@ -381,6 +368,49 @@ const CrudDokumenP3M = () => {
               )}
             </tbody>
           </table>
+
+          {totalPages > 1 && (
+            <div
+              style={{
+                marginTop: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "5px",
+              }}
+            >
+              <button
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                &laquo; Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    style={{
+                      fontWeight: currentPage === number ? "bold" : "normal",
+                      backgroundColor:
+                        currentPage === number ? "#e0e0e0" : "white",
+                      padding: "5px 10px",
+                      border: "1px solid #ccc",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button
+                onClick={() => paginate(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next &raquo;
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>
