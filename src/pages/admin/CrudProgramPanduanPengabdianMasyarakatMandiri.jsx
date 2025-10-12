@@ -7,18 +7,26 @@ const api = import.meta.env.VITE_API_URL;
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const CrudProgramPanduan = () => {
+  // State for Panduan
   const [panduanPenelitian, setPanduanPenelitian] = useState([]);
   const [form, setForm] = useState(initialForm);
   const [editId, setEditId] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+
+  // State for Artikel
   const [dataArtikel, setDataArtikel] = useState([]);
   const [formArtikel, setFormArtikel] = useState({ title: "", author: "" });
   const [thumbnailArtikel, setThumbnailArtikel] = useState(null);
   const [editIdArtikel, setEditIdArtikel] = useState(null);
-
   const [loadingArtikel, setLoadingArtikel] = useState(true);
   const [errorArtikel, setErrorArtikel] = useState("");
+
+  // --- PAGINATION STATE ---
+  const [currentPagePanduan, setCurrentPagePanduan] = useState(1);
+  const [currentPageArtikel, setCurrentPageArtikel] = useState(1);
+  const [itemsPerPage] = useState(10);
+  // -------------------------
 
   const quillEditorRef = useRef(null);
   const quillInstanceRef = useRef(null);
@@ -36,6 +44,7 @@ const CrudProgramPanduan = () => {
     }
   }, []);
 
+  // Fetch for Artikel
   useEffect(() => {
     const fetchDataArtikel = async () => {
       setLoadingArtikel(true);
@@ -44,8 +53,7 @@ const CrudProgramPanduan = () => {
         const response = await fetch(
           `${api}/article/type/informasi_pengabdian_masyarakat_mandiri`
         );
-        if (!response.ok)
-          throw new Error("Gagal mengambil dataArtikel artikel.");
+        if (!response.ok) throw new Error("Gagal mengambil data Artikel.");
         const result = await response.json();
         setDataArtikel(result);
       } catch (err) {
@@ -57,6 +65,29 @@ const CrudProgramPanduan = () => {
     fetchDataArtikel();
   }, [api]);
 
+  // Fetch for Panduan
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `${api}/files/type?type=dokumen_pengabdian_masyarakat_mandiri`
+        );
+        if (!response.ok) {
+          throw new Error("Gagal mengambil data Panduan dari server.");
+        }
+        const data = await response.json();
+        setPanduanPenelitian(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [api]);
+
+  // --- Handlers for Artikel ---
   const handleChangeArticle = (e) => {
     setFormArtikel({ ...formArtikel, [e.target.name]: e.target.value });
   };
@@ -80,12 +111,9 @@ const CrudProgramPanduan = () => {
     formData.append("content", content);
     formData.append("author", formArtikel.author);
 
-    // Hanya kirim thumbnail jika ada file baru yang dipilih
     if (thumbnailArtikel) {
       formData.append("thumbnail", thumbnailArtikel);
     }
-
-    // Kategori tetap ditambahkan saat 'add', tapi tidak perlu saat 'update'
     if (!editIdArtikel) {
       formData.append("category", "informasi_pengabdian_masyarakat_mandiri");
     }
@@ -93,7 +121,6 @@ const CrudProgramPanduan = () => {
     try {
       let response;
       if (editIdArtikel) {
-        // --- LOGIKA UPDATE (PATCH) ---
         response = await fetch(`${api}/article/update/${editIdArtikel}`, {
           method: "PATCH",
           body: formData,
@@ -108,7 +135,6 @@ const CrudProgramPanduan = () => {
         );
         setEditIdArtikel(null);
       } else {
-        // --- LOGIKA TAMBAH (POST) ---
         response = await fetch(`${api}/article/add`, {
           method: "POST",
           body: formData,
@@ -121,11 +147,12 @@ const CrudProgramPanduan = () => {
         setDataArtikel((prev) => [...prev, newData]);
       }
 
-      // Reset formArtikel
       setFormArtikel({ title: "", author: "" });
       setThumbnailArtikel(null);
       quillInstanceRef.current.setText("");
-      if (e.target.thumbnailArtikel) e.target.thumbnailArtikel.value = null;
+      if (e.target.querySelector('input[name="thumbnail"]')) {
+        e.target.querySelector('input[name="thumbnail"]').value = null;
+      }
     } catch (err) {
       setErrorArtikel(err.message);
     }
@@ -135,8 +162,8 @@ const CrudProgramPanduan = () => {
     setEditIdArtikel(item.id);
     setFormArtikel({ title: item.title, author: item.author });
     quillInstanceRef.current.root.innerHTML = item.content;
-    setThumbnailArtikel(null); // Kosongkan state file
-    document.querySelector('input[type="file"]').value = ""; // Reset input file di DOM
+    setThumbnailArtikel(null);
+    document.querySelector('form input[type="file"]').value = "";
   };
 
   const handleDeleteArticle = async (id) => {
@@ -151,7 +178,15 @@ const CrudProgramPanduan = () => {
           const errorData = await response.json();
           throw new Error(errorData.message || "Gagal menghapus artikel.");
         }
-        setDataArtikel(dataArtikel.filter((item) => item.id !== id));
+        const updatedList = dataArtikel.filter((item) => item.id !== id);
+        setDataArtikel(updatedList);
+
+        const newTotalPages = Math.ceil(updatedList.length / itemsPerPage);
+        if (currentPageArtikel > newTotalPages && newTotalPages > 0) {
+          setCurrentPageArtikel(newTotalPages);
+        } else if (updatedList.length === 0) {
+          setCurrentPageArtikel(1);
+        }
       } catch (err) {
         setErrorArtikel(err.message);
       }
@@ -163,31 +198,10 @@ const CrudProgramPanduan = () => {
     setFormArtikel({ title: "", author: "" });
     setThumbnailArtikel(null);
     quillInstanceRef.current.setText("");
-    document.querySelector('input[type="file"]').value = "";
+    document.querySelector('form input[type="file"]').value = "";
   };
 
-  // GET: Mengambil data dengan fetch
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `${api}/files/type?type=dokumen_pengabdian_masyarakat_mandiri`
-        );
-        if (!response.ok) {
-          throw new Error("Gagal mengambil data dari server.");
-        }
-        const data = await response.json();
-        setPanduanPenelitian(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [api]);
-
+  // --- Handlers for Panduan ---
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -197,13 +211,10 @@ const CrudProgramPanduan = () => {
     setError("");
 
     if (editId) {
-      // Logika UPDATE (PATCH) dengan fetch
       try {
         const response = await fetch(`${api}/files/update/${editId}`, {
           method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
           credentials: "include",
         });
@@ -220,7 +231,6 @@ const CrudProgramPanduan = () => {
         setError(err.message);
       }
     } else {
-      // Logika TAMBAH (POST) dengan fetch
       const dataToSend = {
         ...form,
         file_type: "dokumen_pengabdian_masyarakat_mandiri",
@@ -228,9 +238,7 @@ const CrudProgramPanduan = () => {
       try {
         const response = await fetch(`${api}/files/add`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(dataToSend),
           credentials: "include",
         });
@@ -255,38 +263,62 @@ const CrudProgramPanduan = () => {
     });
   };
 
-  // --- FUNGSI DELETE YANG DIPERBARUI ---
   const handleDelete = async (id) => {
     if (window.confirm("Yakin ingin menghapus data ini?")) {
       setError("");
       try {
         const response = await fetch(`${api}/files/delete/${id}`, {
           method: "DELETE",
-          credentials: "include", // Kirim cookie untuk otentikasi
+          credentials: "include",
         });
-
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || "Gagal menghapus data.");
         }
+        const updatedList = panduanPenelitian.filter((item) => item.id !== id);
+        setPanduanPenelitian(updatedList);
 
-        // Jika berhasil, hapus data dari state lokal agar UI terupdate
-        setPanduanPenelitian((prev) => prev.filter((item) => item.id !== id));
+        const newTotalPages = Math.ceil(updatedList.length / itemsPerPage);
+        if (currentPagePanduan > newTotalPages && newTotalPages > 0) {
+          setCurrentPagePanduan(newTotalPages);
+        } else if (updatedList.length === 0) {
+          setCurrentPagePanduan(1);
+        }
       } catch (err) {
         setError(err.message);
       }
     }
   };
-  // ------------------------------------
 
   const handleCancel = () => {
     setEditId(null);
     setForm(initialForm);
   };
 
+  // --- PAGINATION LOGIC FOR PANDUAN ---
+  const indexOfLastPanduan = currentPagePanduan * itemsPerPage;
+  const indexOfFirstPanduan = indexOfLastPanduan - itemsPerPage;
+  const currentItemsPanduan = panduanPenelitian.slice(
+    indexOfFirstPanduan,
+    indexOfLastPanduan
+  );
+  const totalPagesPanduan = Math.ceil(panduanPenelitian.length / itemsPerPage);
+  const paginatePanduan = (pageNumber) => setCurrentPagePanduan(pageNumber);
+
+  // --- PAGINATION LOGIC FOR ARTIKEL ---
+  const indexOfLastArtikel = currentPageArtikel * itemsPerPage;
+  const indexOfFirstArtikel = indexOfLastArtikel - itemsPerPage;
+  const currentItemsArtikel = dataArtikel.slice(
+    indexOfFirstArtikel,
+    indexOfLastArtikel
+  );
+  const totalPagesArtikel = Math.ceil(dataArtikel.length / itemsPerPage);
+  const paginateArtikel = (pageNumber) => setCurrentPageArtikel(pageNumber);
+
   return (
     <div>
-      <h3>Data Panduan Pengabdian Masyarakat</h3>
+      {/* SECTION PANDUAN */}
+      <h3>Data Panduan Pengabdian Masyarakat Mandiri</h3>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form
         onSubmit={handleSubmit}
@@ -319,7 +351,6 @@ const CrudProgramPanduan = () => {
           onChange={handleChange}
           required
         />
-
         <button type="submit">{editId ? "Simpan Perubahan" : "Tambah"}</button>
         {editId && (
           <button type="button" onClick={handleCancel}>
@@ -329,44 +360,91 @@ const CrudProgramPanduan = () => {
       </form>
 
       {loading ? (
-        <p>Memuat data...</p>
+        <p>Memuat data panduan...</p>
       ) : (
-        <table border="1" cellPadding="8" style={{ width: "100%" }}>
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Judul</th>
-              <th>Deskripsi</th>
-              <th>URL</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {panduanPenelitian.map((item, idx) => (
-              <tr key={item.id}>
-                <td>{idx + 1}</td>
-                <td>{item.file_name}</td>
-                <td>{item.file_description}</td>
-                <td>
-                  <a
-                    href={item.file_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Link
-                  </a>
-                </td>
-                <td>
-                  <button onClick={() => handleEdit(item)}>Edit</button>
-                  <button onClick={() => handleDelete(item.id)}>Hapus</button>
-                </td>
+        <>
+          <table
+            border="1"
+            cellPadding="8"
+            style={{ width: "100%", marginTop: 16 }}
+          >
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Judul</th>
+                <th>Deskripsi</th>
+                <th>URL</th>
+                <th>Aksi</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {currentItemsPanduan.map((item, idx) => (
+                <tr key={item.id}>
+                  <td>{indexOfFirstPanduan + idx + 1}</td>
+                  <td>{item.file_name}</td>
+                  <td>{item.file_description}</td>
+                  <td>
+                    <a
+                      href={item.file_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Link
+                    </a>
+                  </td>
+                  <td>
+                    <button onClick={() => handleEdit(item)}>Edit</button>
+                    <button onClick={() => handleDelete(item.id)}>Hapus</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {totalPagesPanduan > 1 && (
+            <div
+              style={{
+                marginTop: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "5px",
+              }}
+            >
+              <button
+                onClick={() => paginatePanduan(currentPagePanduan - 1)}
+                disabled={currentPagePanduan === 1}
+              >
+                &laquo; Prev
+              </button>
+              {Array.from({ length: totalPagesPanduan }, (_, i) => i + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginatePanduan(number)}
+                    style={{
+                      fontWeight:
+                        currentPagePanduan === number ? "bold" : "normal",
+                    }}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button
+                onClick={() => paginatePanduan(currentPagePanduan + 1)}
+                disabled={currentPagePanduan === totalPagesPanduan}
+              >
+                Next &raquo;
+              </button>
+            </div>
+          )}
+        </>
       )}
-      <hr className=" mt-5" />
-      <h2 className=" mt-5">Informasi Panduan Pengabdian Masyarakat</h2>
+
+      <hr style={{ margin: "40px 0" }} />
+
+      {/* SECTION ARTIKEL */}
+      <h2>Informasi Pengabdian Masyarakat Mandiri</h2>
       {errorArtikel && <p style={{ color: "red" }}>{errorArtikel}</p>}
       <form
         onSubmit={handleSubmitArticle}
@@ -405,8 +483,8 @@ const CrudProgramPanduan = () => {
           <label>Thumbnail (Gambar):</label>
           <br />
           <small>
-            ukuran maksimal gambar 10 MB
-            {editIdArtikel ? "Pilih file baru untuk mengganti thumbnail." : ""}
+            Ukuran maksimal 10 MB.{" "}
+            {editIdArtikel ? "Pilih file baru untuk mengganti." : ""}
           </small>
           <br />
           <input
@@ -433,43 +511,89 @@ const CrudProgramPanduan = () => {
         )}
       </form>
 
-      <h3>Daftar Artikel Penelitian</h3>
+      <h3>Daftar Artikel</h3>
       {loadingArtikel ? (
-        <p>Memuat dataArtikel...</p>
+        <p>Memuat data artikel...</p>
       ) : (
-        <table border="1" cellPadding="8" style={{ width: "100%" }}>
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Thumbnail</th>
-              <th>Judul</th>
-              <th>Author</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataArtikel.map((item, idx) => (
-              <tr key={item.id}>
-                <td>{idx + 1}</td>
-                <td>
-                  <img
-                    src={`${backendUrl}${item.thumbnail}`}
-                    alt={item.title}
-                    width="100"
-                  />
-                </td>
-                <td>{item.title}</td>
-                <td>{item.author}</td>
-                <td>
-                  <button onClick={() => handleEditArticle(item)}>Edit</button>
-                  <button onClick={() => handleDeleteArticle(item.id)}>
-                    Hapus
-                  </button>
-                </td>
+        <>
+          <table
+            border="1"
+            cellPadding="8"
+            style={{ width: "100%", marginTop: 16 }}
+          >
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Thumbnail</th>
+                <th>Judul</th>
+                <th>Author</th>
+                <th>Aksi</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {currentItemsArtikel.map((item, idx) => (
+                <tr key={item.id}>
+                  <td>{indexOfFirstArtikel + idx + 1}</td>
+                  <td>
+                    <img
+                      src={`${backendUrl}${item.thumbnail}`}
+                      alt={item.title}
+                      width="100"
+                    />
+                  </td>
+                  <td>{item.title}</td>
+                  <td>{item.author}</td>
+                  <td>
+                    <button onClick={() => handleEditArticle(item)}>
+                      Edit
+                    </button>
+                    <button onClick={() => handleDeleteArticle(item.id)}>
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {totalPagesArtikel > 1 && (
+            <div
+              style={{
+                marginTop: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "5px",
+              }}
+            >
+              <button
+                onClick={() => paginateArtikel(currentPageArtikel - 1)}
+                disabled={currentPageArtikel === 1}
+              >
+                &laquo; Prev
+              </button>
+              {Array.from({ length: totalPagesArtikel }, (_, i) => i + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginateArtikel(number)}
+                    style={{
+                      fontWeight:
+                        currentPageArtikel === number ? "bold" : "normal",
+                    }}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button
+                onClick={() => paginateArtikel(currentPageArtikel + 1)}
+                disabled={currentPageArtikel === totalPagesArtikel}
+              >
+                Next &raquo;
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

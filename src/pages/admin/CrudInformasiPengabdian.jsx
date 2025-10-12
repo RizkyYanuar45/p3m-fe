@@ -4,6 +4,7 @@ import "quill/dist/quill.snow.css";
 
 const api = import.meta.env.VITE_API_URL;
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const CrudInformasiPengabdian = () => {
   const [data, setData] = useState([]);
   const [form, setForm] = useState({ title: "", author: "" });
@@ -12,6 +13,11 @@ const CrudInformasiPengabdian = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // --- PAGINATION STATE ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  // -------------------------
 
   const quillEditorRef = useRef(null);
   const quillInstanceRef = useRef(null);
@@ -72,12 +78,10 @@ const CrudInformasiPengabdian = () => {
     formData.append("content", content);
     formData.append("author", form.author);
 
-    // Hanya kirim thumbnail jika ada file baru yang dipilih
     if (thumbnail) {
       formData.append("thumbnail", thumbnail);
     }
 
-    // Kategori tetap ditambahkan saat 'add', tapi tidak perlu saat 'update'
     if (!editId) {
       formData.append("category", "informasi_pengabdian_masyarakat");
     }
@@ -85,7 +89,6 @@ const CrudInformasiPengabdian = () => {
     try {
       let response;
       if (editId) {
-        // --- LOGIKA UPDATE (PATCH) ---
         response = await fetch(`${api}/article/update/${editId}`, {
           method: "PATCH",
           body: formData,
@@ -100,7 +103,6 @@ const CrudInformasiPengabdian = () => {
         );
         setEditId(null);
       } else {
-        // --- LOGIKA TAMBAH (POST) ---
         response = await fetch(`${api}/article/add`, {
           method: "POST",
           body: formData,
@@ -113,7 +115,6 @@ const CrudInformasiPengabdian = () => {
         setData((prev) => [...prev, newData]);
       }
 
-      // Reset form
       setForm({ title: "", author: "" });
       setThumbnail(null);
       quillInstanceRef.current.setText("");
@@ -127,8 +128,8 @@ const CrudInformasiPengabdian = () => {
     setEditId(item.id);
     setForm({ title: item.title, author: item.author });
     quillInstanceRef.current.root.innerHTML = item.content;
-    setThumbnail(null); // Kosongkan state file
-    document.querySelector('input[type="file"]').value = ""; // Reset input file di DOM
+    setThumbnail(null);
+    document.querySelector('input[type="file"]').value = "";
   };
 
   const handleDelete = async (id) => {
@@ -143,7 +144,16 @@ const CrudInformasiPengabdian = () => {
           const errorData = await response.json();
           throw new Error(errorData.message || "Gagal menghapus artikel.");
         }
-        setData(data.filter((item) => item.id !== id));
+
+        const updatedList = data.filter((item) => item.id !== id);
+        setData(updatedList);
+
+        const newTotalPages = Math.ceil(updatedList.length / itemsPerPage);
+        if (currentPage > newTotalPages && newTotalPages > 0) {
+          setCurrentPage(newTotalPages);
+        } else if (updatedList.length === 0) {
+          setCurrentPage(1);
+        }
       } catch (err) {
         setError(err.message);
       }
@@ -157,6 +167,14 @@ const CrudInformasiPengabdian = () => {
     quillInstanceRef.current.setText("");
     document.querySelector('input[type="file"]').value = "";
   };
+
+  // --- PAGINATION LOGIC ---
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  // -------------------------
 
   return (
     <div>
@@ -199,8 +217,8 @@ const CrudInformasiPengabdian = () => {
           <label>Thumbnail (Gambar):</label>
           <br />
           <small>
-            ukuran maksimal gambar 10 MB
-            {editId ? "Pilih file baru untuk mengganti thumbnail." : ""}
+            ukuran maksimal gambar 10 MB.
+            {editId ? " Pilih file baru untuk mengganti thumbnail." : ""}
           </small>
           <br />
           <input
@@ -227,41 +245,88 @@ const CrudInformasiPengabdian = () => {
         )}
       </form>
 
-      <h3>Daftar Artikel Penelitian</h3>
+      <h3>Daftar Artikel Pengabdian</h3>
       {loading ? (
         <p>Memuat data...</p>
       ) : (
-        <table border="1" cellPadding="8" style={{ width: "100%" }}>
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Thumbnail</th>
-              <th>Judul</th>
-              <th>Author</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, idx) => (
-              <tr key={item.id}>
-                <td>{idx + 1}</td>
-                <td>
-                  <img
-                    src={`${backendUrl}${item.thumbnail}`}
-                    alt={item.title}
-                    width="100"
-                  />
-                </td>
-                <td>{item.title}</td>
-                <td>{item.author}</td>
-                <td>
-                  <button onClick={() => handleEdit(item)}>Edit</button>
-                  <button onClick={() => handleDelete(item.id)}>Hapus</button>
-                </td>
+        <>
+          <table border="1" cellPadding="8" style={{ width: "100%" }}>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Thumbnail</th>
+                <th>Judul</th>
+                <th>Author</th>
+                <th>Aksi</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {currentItems.map((item, idx) => (
+                <tr key={item.id}>
+                  <td>{indexOfFirstItem + idx + 1}</td>
+                  <td>
+                    <img
+                      src={`${backendUrl}${item.thumbnail}`}
+                      alt={item.title}
+                      width="100"
+                    />
+                  </td>
+                  <td>{item.title}</td>
+                  <td>{item.author}</td>
+                  <td>
+                    <button onClick={() => handleEdit(item)}>Edit</button>
+                    <button onClick={() => handleDelete(item.id)}>Hapus</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* --- PAGINATION CONTROLS --- */}
+          {totalPages > 1 && (
+            <div
+              style={{
+                marginTop: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "5px",
+              }}
+            >
+              <button
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                &laquo; Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    style={{
+                      fontWeight: currentPage === number ? "bold" : "normal",
+                      padding: "5px 10px",
+                      cursor: "pointer",
+                      border: "1px solid #ccc",
+                      backgroundColor:
+                        currentPage === number ? "#e0e0e0" : "white",
+                    }}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button
+                onClick={() => paginate(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next &raquo;
+              </button>
+            </div>
+          )}
+          {/* ----------------------------- */}
+        </>
       )}
     </div>
   );
