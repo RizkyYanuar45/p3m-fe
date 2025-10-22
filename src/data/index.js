@@ -99,7 +99,6 @@ export const navLinks = [
         path: "/panduan-pengelolaan-jurnal-ilmiah",
         text: "Panduan Pengelolaan Jurnal Ilmiah",
       },
-      { id: 2, path: "", text: "Link OJS Jurnal" },
     ],
   },
   {
